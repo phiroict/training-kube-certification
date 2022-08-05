@@ -85,8 +85,8 @@ fn gateway() -> Redirect {
             target_url = format!("http://{}", val);
         }
         Err(_err) => {
-            info!("Forwarding to default url {}", "mtf-dl-identity-service:443");
-            target_url = "http://mtf-dl-identity-service:443".to_string();
+            info!("Forwarding to default url {}", "datasource:8001");
+            target_url = "http://datasource:8001".to_string();
             ()
         }
     }
