@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/vagrant/Projects/kube-training'
+bash ./create_certificate.sh "phiroict"
+make: Leaving directory '/home/vagrant/Projects/kube-training'
+ 
