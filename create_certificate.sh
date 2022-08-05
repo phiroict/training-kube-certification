@@ -10,7 +10,7 @@ pwd
 ls -l
 echo "Now attaching the certificate to the user"
 PASSWORD=$(cat /proc/sys/kernel/random/uuid) 
-kubectl config set-credentials ${TARGET_USER} --client-certificate=$(pwd)/${TARGET_USER}.crt --client-key=$(pwd)/${TARGET_USER}.key --username=${TARGET_USER}
+kubectl config set-credentials ${TARGET_USER} --client-certificate=$(pwd)/${TARGET_USER}.crt --client-key=$(pwd)/${TARGET_USER}.key --username=${TARGET_USER} --password=${PASSWORD}
 kubectl config set-context ${TARGET_USER} --cluster=kubernetes --user=${TARGET_USER} --namespace=default
 echo "Password, will be printend only once, do not lose it!: '${PASSWORD}'"
 echo ${TARGET_USER}:${PASSWORD} > secret-password-cluster.txt

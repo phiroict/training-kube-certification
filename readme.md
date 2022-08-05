@@ -1,3 +1,22 @@
+# Goal 
+ This is a project that is built while studying for the K8s certification. 
+## Stack
+- Linux system (this has been developed on a Arch linux machine, should work fine on other distros as well)
+- git
+- kubectl
+- kubernetes cluster 
+- kustomize
+
+For the examples add: 
+```text
+alias k=kubectl 
+```
+to your  `.profile` or `.bashrc` or equivalent.
+
+
+There is a project to set up a complete cluster : `https://github.com/phiroict/training_k8s_cluster` you can use to create a cluster yourself. There are many more ways to create a cluster, this is one of them. 
+
+
 # Create users 
 
 ```bash
