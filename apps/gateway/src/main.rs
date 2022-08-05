@@ -77,7 +77,7 @@ struct DataSet {
 
 #[post("/gateway")]
 fn gateway() -> Redirect {
-    let identity_url = env::var("MTF_IDENTITY_URL");
+    let identity_url = env::var("DATASOURCE_URL");
     let mut target_url;
     match identity_url {
         Ok(val) => {
