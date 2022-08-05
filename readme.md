@@ -43,7 +43,7 @@ Change back to the administrator
 k config use-context kubernetes-admin@kubernetes
 ```
 
-# Issue 
+# Issue context [solved]
 
 There seems to be a bug in the set-credentials where it should be:
 
@@ -61,3 +61,7 @@ but it is
     user: ""
 ```
 So the context change cannot find the cluster. 
+Solved, missed the settings in the set-context should be this
+```bash
+kubectl config set-context ${TARGET_USER} --cluster=kubernetes --user=${TARGET_USER} --namespace=default
+```
