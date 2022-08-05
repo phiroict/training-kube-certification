@@ -43,6 +43,28 @@ Change back to the administrator
 k config use-context kubernetes-admin@kubernetes
 ```
 
+# Environments 
+
+We use `kustomize` to render the environments for the kubernetes setup. 
+Note that it needs an external app installed, there is a integrated version in kubectl itself, but it is barely maintained. 
+
+The scripts are in the `stack/kustomize` folder and you call them from that folder with:
+
+[env is one of `{dev,test,uat,prod}`]
+
+```bash
+kustomize build overlays/<env>
+```
+Apply with
+
+```bash
+kubectl apply -k overlays/<env>
+```
+Remove with:
+```bash
+kubectl delete -k overlays/<env>
+```
+
 # Issue context [solved]
 
 There seems to be a bug in the set-credentials where it should be:
