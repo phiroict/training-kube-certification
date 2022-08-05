@@ -1,0 +1,10 @@
+[default]
+address = "0.0.0.0"
+port = 8001
+workers = 16
+keep_alive = 5
+read_timeout = 5
+write_timeout = 5
+log = "silly"
+secret_key = "HPRYyVRiMyxpw5sBB1XeCMN1kFsDCqKvBi2QJxBVHQk="
+limits = { forms = 32768 }
