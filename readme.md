@@ -42,3 +42,22 @@ Change back to the administrator
 ```bash
 k config use-context kubernetes-admin@kubernetes
 ```
+
+# Issue 
+
+There seems to be a bug in the set-credentials where it should be:
+
+```yaml
+- context:
+    cluster: kubernetes
+    user: phiroict
+```
+
+but it is 
+
+```yaml
+- context:
+    cluster: ""
+    user: ""
+```
+So the context change cannot find the cluster. 
