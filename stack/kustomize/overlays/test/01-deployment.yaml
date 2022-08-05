@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  app-gateway
+  namespace: dev-applications
+  labels:
+    app:  app-gateway
+
+spec:
+  selector:
+    matchLabels:
+      app: app-gateway
+  replicas: 2
+  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  app-datasource
+  namespace: dev-applications
+  labels:
+    app:  app-datasource
+
+spec:
+  selector:
+    matchLabels:
+      app: app-datasource
+  replicas: 2
+  

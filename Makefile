@@ -5,6 +5,17 @@ create_readonly_role_sa:
 	k apply -f set-role-for-serviceaccount.yaml
 create_sa_token_dashboard_admin:
 	k apply -f sa_token_generation.yaml
+
+## Deployment 
+deploy_dev:
+	cd stack/kustomize && kubectl apply -k overlays/dev
+deploy_test:
+	cd stack/kustomize && kubectl apply -k overlays/test
+deploy_uat:
+	cd stack/kustomize && kubectl apply -k overlays/uat
+deploy_prod:
+	cd stack/kustomize && kubectl apply -k overlays/prod
+
 # App builders -------------------------------------------------------------------------------------------------------------------
 ## Initialize (run only once in a while)
 app_init:
@@ -25,3 +36,11 @@ app_build_gateway_release:
 app_build_datasource_release:
 	cd apps/datasource && cargo build --release
 app_build_all_release: app_build_gateway_release app_build_datasource_release
+
+## Container build
+app_container_gateway:
+	docker build --build-arg path=apps/gateway --build-arg app_name=gateway -t phiroict/training_k8s_rust_gateway:20220805 -f infra/docker/Dockerfile  . 
+	docker push phiroict/training_k8s_rust_gateway:20220805
+app_container_datasource:
+	docker build --build-arg path=apps/datasource --build-arg app_name=datasource -t phiroict/training_k8s_rust_datasource:20220805 -f infra/docker/Dockerfile  . 
+	docker push phiroict/training_k8s_rust_datasource:20220805

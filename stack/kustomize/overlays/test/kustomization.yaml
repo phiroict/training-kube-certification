@@ -14,3 +14,13 @@ patches:
   target:
     kind: Namespace 
     name: "dev-applications"
+- patch: |-
+    - op: replace
+      path: "/metadata/namespace"
+      value: "test-applications"
+    - op: |-
+      path: "/spec/replicas"
+      value: "2"
+  target:
+    kind: Deployment
+    name: "dev-applications"
