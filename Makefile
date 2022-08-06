@@ -44,3 +44,4 @@ app_container_gateway:
 app_container_datasource:
 	docker build --build-arg path=apps/datasource --build-arg app_name=datasource -t phiroict/training_k8s_rust_datasource:20220805 -f infra/docker/Dockerfile  . 
 	docker push phiroict/training_k8s_rust_datasource:20220805
+app_container_build_all: app_container_gateway app_container_datasource

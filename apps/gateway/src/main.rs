@@ -1,8 +1,7 @@
 #![allow(unused_mut)]
+use shared::shared::DataSet;
 
 mod logging;
-
-
 use log::{error, info};
 use rocket::fairing::{Fairing, Info, Kind};
 
@@ -15,8 +14,7 @@ use rocket::{Request, Response};
 use chrono::{Utc};
 use rocket::http::{Header};
 use std::env;
-use rocket::response::Redirect;
-
+use rocket::serde::json::Json;
 
 
 struct GatewayFairing {}
@@ -66,17 +64,18 @@ fn not_found(req: &Request) -> String {
     format!("[gw] I couldn't find '{}'. Try something else?", req.uri())
 }
 
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(crate = "rocket::serde")]
-struct DataSet {
+struct IncomingData {
     name: String,
+    id: u64,
 }
-
 
 //Processor
 
-#[post("/gateway")]
-fn gateway() -> Redirect {
+#[post("/gateway", format="json", data="<_data>")]
+fn gateway(_data: Json<IncomingData>) -> Json<DataSet> {
     let identity_url = env::var("DATASOURCE_URL");
     let mut target_url;
     match identity_url {
@@ -91,7 +90,12 @@ fn gateway() -> Redirect {
         }
     }
     info!("Redirecting to url {}", format!("{}",target_url));
-    Redirect::temporary(target_url)
+    let data_set = DataSet {
+        date: "20220806".to_string(),
+        seq: _data.id + 1,
+        name: target_url,
+    };
+    Json(data_set)
 }
 
 
