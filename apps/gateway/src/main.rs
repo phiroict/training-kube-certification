@@ -12,7 +12,7 @@ use rocket::serde::{Serialize};
 use serde::Deserialize;
 use rocket::{Request, Response};
 use chrono::{Utc};
-use rocket::http::{Header};
+use rocket::http::{Header, Status};
 use std::env;
 use rocket::serde::json::Json;
 
@@ -72,8 +72,15 @@ struct IncomingData {
     id: u64,
 }
 
-//Processor
+//health check for k8s
+#[get("/_status/healthz")]
+fn healthcheck() -> Status {
+    Status {
+        code: 200
+    }
+}
 
+//Processor
 #[post("/gateway", format="json", data="<_data>")]
 fn gateway(_data: Json<IncomingData>) -> Json<DataSet> {
     let identity_url = env::var("DATASOURCE_URL");
@@ -107,7 +114,7 @@ async fn main() {
     let fairing = GatewayFairing {};
     let process = rocket::build()
         .attach(fairing)
-        .mount("/", routes![gateway])
+        .mount("/", routes![gateway,healthcheck])
         .register("/gateway", catchers![internal_error, not_found])
         .launch()
         .await;

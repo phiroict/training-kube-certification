@@ -10,7 +10,7 @@ extern crate rocket;
 
 use rocket::{Request, Response};
 use chrono::{Utc};
-use rocket::http::{Header};
+use rocket::http::{Header, Status};
 use std::env;
 use rocket::serde::json::Json;
 
@@ -62,7 +62,13 @@ fn not_found(req: &Request) -> String {
     format!("[gw] I couldn't find '{}'. Try something else?", req.uri())
 }
 
-
+//health check for k8s
+#[get("/_status/healthz")]
+fn healthcheck() -> Status {
+    Status {
+        code: 200
+    }
+}
 
 
 //Processor
@@ -100,7 +106,7 @@ async fn main() {
     let fairing = GatewayFairing {};
     let process = rocket::build()
         .attach(fairing)
-        .mount("/", routes![data_request])
+        .mount("/", routes![data_request,healthcheck])
         .register("/data", catchers![internal_error, not_found])
         .launch()
         .await;

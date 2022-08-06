@@ -32,7 +32,7 @@ spec:
     clientIP:
       timeoutSeconds: 10800
   ports:
-  - name: gateway-port
+  - name: datasource-port
     protocol: TCP
     port: 8010
     targetPort: 8010 
