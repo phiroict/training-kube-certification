@@ -1,3 +1,4 @@
+# ## Gateway
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -30,7 +31,7 @@ spec:
       containers:
       - name:  app-gateway
   
-        image: phiroict/training_k8s_rust_gateway@sha256:45d15b88cf0506a37077daaf44c7d6888e161cc73cdfe186248fa3b19bf857bb
+        image: phiroict/training_k8s_rust_gateway:20220806.1
         resources:
           requests:
             cpu: 500m
@@ -56,12 +57,8 @@ spec:
           failureThreshold: 3
           periodSeconds: 10
         env:
-        - name: DB_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: app-gateway
-          
-              key: DB_HOST
+        - name: DATASOURCE_URL
+          value: datasource:8010
         ports:
         - containerPort:  8000
           name:  app-gateway
@@ -74,6 +71,7 @@ spec:
           hostPath:
             path: /usr/share/zoneinfo/Pacific/Auckland
       restartPolicy: Always
+# ## Datasource deployment
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -106,7 +104,7 @@ spec:
       containers:
       - name:  app-datasource
   
-        image: phiroict/training_k8s_rust_datasource@sha256:e703fa587daeba121a6085a2645f5e984c451a989151f26216961f8d8d5965c7
+        image: phiroict/training_k8s_rust_datasource:20220806.1
         resources:
           requests:
             cpu: 500m
@@ -116,7 +114,7 @@ spec:
             memory: 500Mi
         livenessProbe:
           tcpSocket:
-            port: 8000
+            port: 8010
           initialDelaySeconds: 5
           timeoutSeconds: 5
           successThreshold: 1
@@ -125,22 +123,15 @@ spec:
         readinessProbe:
           httpGet:
             path: /_status/healthz
-            port: 8000
+            port: 8010
           initialDelaySeconds: 5
           timeoutSeconds: 2
           successThreshold: 1
           failureThreshold: 3
           periodSeconds: 10
-        env:
-        - name: DB_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: app-gateway
-          
-              key: DB_HOST
         ports:
-        - containerPort:  8000
-          name:  app-gateway
+        - containerPort:  8010
+          name:  app-datasource
       
         volumeMounts:
         - name: localtime
