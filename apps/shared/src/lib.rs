@@ -7,5 +7,6 @@ pub mod shared {
         pub date: String,
         pub seq: u64,
         pub name: String,
+        pub error: String,
     }
 }

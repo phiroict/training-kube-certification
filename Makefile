@@ -29,6 +29,9 @@ app_build_gateway:
 app_build_datasource:
 	cd apps/datasource && cargo build 
 app_build_all: app_build_gateway app_build_datasource
+app_run_all:
+	cd apps/gateway && nohup cargo run&
+	cd apps/datasource && nohup cargo run&
 
 ## Release build
 app_build_gateway_release:

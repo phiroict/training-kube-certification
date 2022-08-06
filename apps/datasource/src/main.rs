@@ -93,6 +93,7 @@ fn data_request(_data: Json<DataSet>) -> Json<DataSet> {
         date: "20220806".to_string(),
         seq: _data.seq + 9999,
         name: target_url,
+        error: "".to_string(),
     };
     Json(data_set)
 }

@@ -14,6 +14,7 @@ use rocket::{Request, Response};
 use chrono::{Utc};
 use rocket::http::{Header, Status};
 use std::env;
+use reqwest::Error;
 use rocket::serde::json::Json;
 
 struct GatewayFairing {}
@@ -90,24 +91,36 @@ async fn gateway(_data: Json<IncomingData>) -> Json<DataSet> {
             target_url = format!("http://{}", val);
         }
         Err(_err) => {
-            info!("Forwarding to default url {}", "datasource:8001");
-            target_url = "http://datasource:8001".to_string();
+            info!("Forwarding to default url {}", "datasource:8010");
+            target_url = "http://datasource:8010".to_string();
             ()
         }
     }
     info!("Calling service to url {}", format!("{}",target_url));
     let client = reqwest::Client::new();
-    let _res = client.post(&target_url)
+    let res = client.post(&target_url)
         .json(&(_data.into_inner()))
         .send()
         .await;
-
-    let data_set = DataSet {
-        date: "20220806".to_string(),
-        seq: 1,
-        name: target_url,
+    let call_response = match res {
+        Ok(res) => {
+            DataSet {
+                date: "20220807".to_string(),
+                seq: 1,
+                name: "OK".to_string(),
+                error: "".to_string()
+            }
+        }
+        Err(error) => {
+            DataSet {
+                date: "20220807".to_string(),
+                seq: 2,
+                name: "NOK".to_string(),
+                error: format!("Call failed reason: {}", error.to_string())
+            }
+        }
     };
-    Json(data_set)
+    Json(call_response)
 }
 
 
