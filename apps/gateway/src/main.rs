@@ -16,7 +16,6 @@ use rocket::http::{Header, Status};
 use std::env;
 use rocket::serde::json::Json;
 
-
 struct GatewayFairing {}
 
 #[async_trait]
@@ -82,7 +81,7 @@ fn healthcheck() -> Status {
 
 //Processor
 #[post("/gateway", format="json", data="<_data>")]
-fn gateway(_data: Json<IncomingData>) -> Json<DataSet> {
+async fn gateway(_data: Json<IncomingData>) -> Json<DataSet> {
     let identity_url = env::var("DATASOURCE_URL");
     let mut target_url;
     match identity_url {
@@ -96,10 +95,16 @@ fn gateway(_data: Json<IncomingData>) -> Json<DataSet> {
             ()
         }
     }
-    info!("Redirecting to url {}", format!("{}",target_url));
+    info!("Calling service to url {}", format!("{}",target_url));
+    let client = reqwest::Client::new();
+    let _res = client.post(&target_url)
+        .json(&(_data.into_inner()))
+        .send()
+        .await;
+
     let data_set = DataSet {
         date: "20220806".to_string(),
-        seq: _data.id + 1,
+        seq: 1,
         name: target_url,
     };
     Json(data_set)
