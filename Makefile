@@ -39,9 +39,9 @@ app_build_all_release: app_build_gateway_release app_build_datasource_release
 
 ## Container build
 app_container_gateway:
-	docker build --build-arg path=apps/gateway --build-arg app_name=gateway -t phiroict/training_k8s_rust_gateway:20220805 -f infra/docker/Dockerfile  . 
-	docker push phiroict/training_k8s_rust_gateway:20220805
+	docker build --build-arg path=apps --build-arg app_name=gateway -t phiroict/training_k8s_rust_gateway:20220806 -f infra/docker/Dockerfile  .
+	docker push phiroict/training_k8s_rust_gateway:20220806
 app_container_datasource:
-	docker build --build-arg path=apps/datasource --build-arg app_name=datasource -t phiroict/training_k8s_rust_datasource:20220805 -f infra/docker/Dockerfile  . 
-	docker push phiroict/training_k8s_rust_datasource:20220805
+	docker build --build-arg path=apps --build-arg app_name=datasource -t phiroict/training_k8s_rust_datasource:20220806 -f infra/docker/Dockerfile  .
+	docker push phiroict/training_k8s_rust_datasource:20220806
 app_container_build_all: app_container_gateway app_container_datasource
