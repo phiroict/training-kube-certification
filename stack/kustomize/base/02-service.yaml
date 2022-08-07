@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gateway
-  namespace: default
+  namespace: dev-applications
 spec:
   selector:
     app: app-gateway
@@ -22,7 +22,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: datasource
-  namespace: default
+  namespace: dev-applications
 spec:
   selector:
     app: app-datasource

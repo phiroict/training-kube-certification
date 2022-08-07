@@ -31,7 +31,7 @@ spec:
       containers:
       - name:  app-gateway
   
-        image: phiroict/training_k8s_rust_gateway:20220806.1
+        image: phiroict/training_k8s_rust_gateway:20220806.3
         resources:
           requests:
             cpu: 500m
@@ -104,7 +104,7 @@ spec:
       containers:
       - name:  app-datasource
   
-        image: phiroict/training_k8s_rust_datasource:20220806.1
+        image: phiroict/training_k8s_rust_datasource:20220806.3
         resources:
           requests:
             cpu: 500m
