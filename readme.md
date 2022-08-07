@@ -35,13 +35,17 @@ There is a project to set up a complete cluster : `https://github.com/phiroict/t
 
 ## Use minikube. 
 If you are less interested in the inner workings of kubernetes, you can use minikube, a cluster you can run locally on a machine with at least 24 GiB RAM. 
-In the make file there are three ways to create these minikube stacks 
+In the make file there are four ways to create these minikube stacks 
 
 ```makefile
 ## Minikube start commands with several drivers
 minikube_podman:
 	minikube config set rootless true
-	minikube start --driver podman --container-runtime containerd
+	minikube start --driver podman --container-runtime containerd  --nodes 4 --cpus 2 --memory 8000M
+	minikube addons enable ingress
+minikube_docker:	
+	minikube start --driver docker  --nodes 4 --cpus 2 --memory 8000M
+	minikube addons enable ingress
 minikube_virtualbox:
 	minikube start --driver virtualbox --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
@@ -60,8 +64,8 @@ More info about [minikube](https://minikube.sigs.k8s.io/docs/)
 
 
 
-
-# Create users 
+# Kubernetes actions 
+## Create users 
 
 ```bash
 bash create_certificate.sh <NAME>
@@ -106,7 +110,7 @@ Change back to the administrator
 k config use-context kubernetes-admin@kubernetes
 ```
 
-# Environments 
+## Environments 
 
 We use `kustomize` to render the environments for the kubernetes setup. 
 Note that it needs an external app installed, there is a integrated version in kubectl itself, but it is barely maintained. 
@@ -128,7 +132,8 @@ Remove with:
 kubectl delete -k overlays/<env>
 ```
 
-# Issue context [solved]
+# Issues
+## Issue context [solved]
 
 There seems to be a bug in the set-credentials where it should be:
 

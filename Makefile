@@ -59,7 +59,12 @@ docker_compose_stop:
 ## Minikube start commands with several drivers
 minikube_podman:
 	minikube config set rootless true
-	minikube start --driver podman --container-runtime containerd
+	minikube start --driver podman --container-runtime containerd  --nodes 4 --cpus 2 --memory 8000M
+	minikube addons enable ingress
+minikube_docker:
+	minikube start --driver docker  --nodes 4 --cpus 2 --memory 8000M
+	minikube addons enable ingress
+
 minikube_virtualbox:
 	minikube start --driver virtualbox --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
