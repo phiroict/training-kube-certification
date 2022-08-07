@@ -17,6 +17,9 @@ deploy_uat:
 deploy_prod:
 	cd stack/kustomize && kubectl apply -k overlays/prod
 
+undeploy_dev:
+	cd stack/kustomize && kubectl delete -k overlays/dev
+
 # App builders -------------------------------------------------------------------------------------------------------------------
 ## Initialize (run only once in a while)
 app_init:
@@ -53,3 +56,13 @@ docker_compose_run:
 	cd infra/docker && docker-compose up -d
 docker_compose_stop:
 	cd infra/docker && docker-compose down
+## Minikube start commands with several drivers
+minikube_podman:
+	minikube config set rootless true
+	minikube start --driver podman --container-runtime containerd
+minikube_virtualbox:
+	minikube start --driver virtualbox --nodes 4 --cpus 2 --memory 8000M
+	minikube addons enable ingress
+minikube_kvm2:
+	minikube start --driver kvm2 --nodes 4 --cpus 2 --memory 8000M
+	minikube addons enable ingress

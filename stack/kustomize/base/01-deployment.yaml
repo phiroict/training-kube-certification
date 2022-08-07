@@ -12,7 +12,7 @@ spec:
   selector:
     matchLabels:
       app: app-gateway
-  replicas: 1
+  replicas: 5
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -85,7 +85,7 @@ spec:
   selector:
     matchLabels:
       app: app-datasource
-  replicas: 1
+  replicas: 2
   strategy:
     rollingUpdate:
       maxSurge: 25%

@@ -1,20 +1,64 @@
 # Goal 
  This is a project that is built while studying for the K8s certification. 
 ## Stack
-- Linux system (this has been developed on a Arch linux machine, should work fine on other distros as well)
+- Linux system (this has been developed on a Arch linux machine, should work fine on other distros as well) 
+  - MacOS -> This is now the ARM platform so many container images need to be build for this platform, this is out of scope for this training. Good luck.
+  - MacOS and Windows use VM when running docker containers so this solution may not work without faffing network settings, again, outside scope and again, Good luck.
 - git
 - kubectl
 - kubernetes cluster 
 - kustomize
+- make (or CMake)
 
+Optional:
+- minikube
+
+
+
+# Preparation system
+
+## Short cuts 
 For the examples add: 
 ```text
 alias k=kubectl 
 ```
 to your  `.profile` or `.bashrc` or equivalent.
 
+## Local machine
+[Arch linux] To use the opensource kvm2 version of minikube, follow the instructions on `https://gist.github.com/grugnog/caa118205ad498423266f26150a5d555` 
 
-There is a project to set up a complete cluster : `https://github.com/phiroict/training_k8s_cluster` you can use to create a cluster yourself. There are many more ways to create a cluster, this is one of them. 
+# Kubernetes
+
+## Build cluster yourself
+There is a project to set up a complete cluster : `https://github.com/phiroict/training_k8s_cluster` you can use to create a cluster yourself. There are many more ways to create a cluster, this is one of them.
+
+
+## Use minikube. 
+If you are less interested in the inner workings of kubernetes, you can use minikube, a cluster you can run locally on a machine with at least 24 GiB RAM. 
+In the make file there are three ways to create these minikube stacks 
+
+```makefile
+## Minikube start commands with several drivers
+minikube_podman:
+	minikube config set rootless true
+	minikube start --driver podman --container-runtime containerd
+minikube_virtualbox:
+	minikube start --driver virtualbox --nodes 4 --cpus 2 --memory 8000M
+	minikube addons enable ingress
+minikube_kvm2:
+	minikube start --driver kvm2 --nodes 4 --cpus 2 --memory 8000M
+	minikube addons enable ingress
+```
+These create the stack on several virtualization platforms. If you are an experience user with one of these, use these. THere are more platforms available by the way, these
+were the three I tested it on.
+More info [here](https://minikube.sigs.k8s.io/docs/drivers/)  
+More info about [minikube](https://minikube.sigs.k8s.io/docs/)  
+
+
+
+ 
+
+
 
 
 # Create users 
