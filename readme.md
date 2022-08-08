@@ -9,6 +9,8 @@
 - kubernetes cluster 
 - kustomize
 - make (or CMake)
+- istio
+- rustup / rustc
 
 Optional:
 - minikube

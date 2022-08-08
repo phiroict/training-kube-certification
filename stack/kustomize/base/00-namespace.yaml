@@ -4,6 +4,7 @@
   metadata:
     labels:
       kubernetes.io/metadata.name: dev-applications
+      istio-injection: enabled 
     name: dev-applications
   spec:
     finalizers:

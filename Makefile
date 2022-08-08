@@ -64,10 +64,16 @@ minikube_podman:
 minikube_docker:
 	minikube start --driver docker  --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
-
 minikube_virtualbox:
 	minikube start --driver virtualbox --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
 minikube_kvm2:
 	minikube start --driver kvm2 --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
+istio_init:
+	istioctl install --set profile=demo -y
+istio_inject:
+	kubectl label namespace dev-applications istio-injection=enabled --overwrite
+	kubectl label namespace test-applications istio-injection=enabled --overwrite
+	kubectl label namespace uat-applications istio-injection=enabled --overwrite
+	kubectl label namespace prod-applications istio-injection=enabled --overwrite

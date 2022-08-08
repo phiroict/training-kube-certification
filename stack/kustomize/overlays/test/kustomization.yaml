@@ -10,6 +10,9 @@ patches:
     - op: replace 
       path: "/metadata/labels/kubernetes.io~1metadata.name"
       value: "test-applications"
+    - op: replace 
+      path: "/metadata/namespace"
+      value: "test-applications"
 
   target:
     kind: Namespace 
