@@ -1,4 +1,5 @@
 version="20220806.3"
+istio_version="1.13.7"
 # Kubernetes calls  --------------------------------------------------------------------------------------------------------------
 create_user:
 	bash ./create_certificate.sh "phiroict"
@@ -77,3 +78,7 @@ istio_inject:
 	kubectl label namespace test-applications istio-injection=enabled --overwrite
 	kubectl label namespace uat-applications istio-injection=enabled --overwrite
 	kubectl label namespace prod-applications istio-injection=enabled --overwrite
+istio_extras:
+	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz 
+	tar xfv istio-$(istio_version)-linux-amd64.tar.gz
+	kubectl apply -f istio-$(istio_version)/samples/addons/

@@ -13,7 +13,7 @@ spec:
     clientIP:
       timeoutSeconds: 10800
   ports:
-  - name: gateway-port
+  - name: http-gateway
     protocol: TCP
     port: 8000
     targetPort: 8000
@@ -33,7 +33,7 @@ spec:
     clientIP:
       timeoutSeconds: 10800
   ports:
-  - name: datasource-port
+  - name: http-datasource
     protocol: TCP
     port: 8010
     targetPort: 8010 
