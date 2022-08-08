@@ -34,7 +34,7 @@ There is a project to set up a complete cluster : `https://github.com/phiroict/t
 
 
 ## Use minikube. 
-If you are less interested in the inner workings of kubernetes, you can use minikube, a cluster you can run locally on a machine with at least 24 GiB RAM. 
+If you are less interested in the inner workings of kubernetes, you can use minikube, a cluster you can run locally on a machine with at least 36 GiB RAM. 
 In the make file there are four ways to create these minikube stacks 
 
 ```makefile
