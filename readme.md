@@ -25,7 +25,7 @@ alias k=kubectl
 to your  `.profile` or `.bashrc` or equivalent.
 
 ## Local machine
-[Arch linux] To use the opensource kvm2 version of minikube, follow the instructions on `https://gist.github.com/grugnog/caa118205ad498423266f26150a5d555` 
+[Arch linux] To use the opensource kvm2 version of minikube, follow the [instructions](`https://gist.github.com/grugnog/caa118205ad498423266f26150a5d555`) 
 
 # Kubernetes
 
@@ -53,7 +53,7 @@ minikube_kvm2:
 	minikube start --driver kvm2 --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
 ```
-These create the stack on several virtualization platforms. If you are an experience user with one of these, use these. THere are more platforms available by the way, these
+These create the stack on several virtualization platforms. If you are an experience user with one of these, use these. There are more platforms available by the way, these
 were the three I tested it on.
 More info [here](https://minikube.sigs.k8s.io/docs/drivers/)  
 More info about [minikube](https://minikube.sigs.k8s.io/docs/)  
@@ -61,8 +61,13 @@ More info about [minikube](https://minikube.sigs.k8s.io/docs/)
 
 
  
+## Convenient commands 
 
+### set namespace default 
 
+```bash
+k config set-context --current  --namespace dev-applications
+```
 
 # Kubernetes actions 
 ## Create users 
@@ -109,6 +114,29 @@ Change back to the administrator
 ```bash
 k config use-context kubernetes-admin@kubernetes
 ```
+
+## Service accounts 
+
+Create like this: 
+
+```yaml
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:  
+  name: dev-deploy-principal
+  namespace: dev-applications
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sa-dev-deploy-token
+  annotations:
+    kubernetes.io/service-account.name: dev-deploy-principal
+type: kubernetes.io/service-account-token  
+```
+Note that since k8s 1.24 the secret is no longer automatically generated, this is not well documented as of yet, so we generate the secret as is depicted.
+
 
 ## Environments 
 
