@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.3
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
@@ -6,20 +8,16 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Aug  8 12:01:06 2022
+# Make data base, printed on Tue Aug  9 08:13:50 2022
 
 # Variables
 
-# environment
-GO111MODULE = on
 # environment
 GDK_BACKEND = x11
 # environment
 LC_ALL = C
 # environment
 NO_AT_BRIDGE = 1
-# environment
-GJS_DEBUG_OUTPUT = stderr
 # environment
 LC_NAME = en_NZ.UTF-8
 # environment
@@ -36,12 +34,8 @@ GDM_LANG = en_NZ.UTF-8
 MAKE_COMMAND := make
 # environment
 GTK3_MODULES = xapp-gtk3-module
-# environment
-GOPATH = /home/phiro/Dropbox/werk/hypr/MTF/Projects/infra-poc-fronend/azure_agent_vnet
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
-# environment
-_INTELLIJ_FORCE_SET_GOFLAGS =  -mod=
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -68,6 +62,8 @@ XAUTHORITY = /run/user/1000/gdm/Xauthority
 .LOADED := 
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+GNOME_TERMINAL_SERVICE = :1.92
 # makefile
 MAKEFLAGS = pqrR
 # makefile
@@ -91,13 +87,13 @@ MAKEFILE_LIST := Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 107423
+VSCODE_PID = 14906
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/philip-precision7740:@/tmp/.ICE-unix/3712,unix/philip-precision7740:/tmp/.ICE-unix/3712
+SESSION_MANAGER = local/philip-precision7740:@/tmp/.ICE-unix/3635,unix/philip-precision7740:/tmp/.ICE-unix/3635
 # automatic
 *F = $(notdir $*)
 # environment
@@ -110,8 +106,6 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 <D = $(patsubst %/,%,$(dir $<))
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
-# environment
-_INTELLIJ_FORCE_SET_GO111MODULE = on
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # makefile
@@ -123,17 +117,15 @@ MAKECMDGOALS := all
 # environment
 XMODIFIERS = @im=ibus
 # environment
-GJS_DEBUG_TOPICS = JS ERROR;JS LOG
-# environment
 SHLVL = 2
+# environment
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/3460469b_8a8d_4771_8782_19798e59c559
 # environment
 MAKELEVEL := 0
 # default
 MAKE = $(MAKE_COMMAND)
 # environment
 PATH = /home/phiro/.bin:/usr/local/bin:/usr/bin:/var/lib/snapd/snap/bin:/usr/local/sbin:/var/lib/flatpak/exports/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/phiro/.local/share/JetBrains/Toolbox/scripts
-# environment
-_INTELLIJ_FORCE_SET_GOPATH = /home/phiro/Dropbox/werk/hypr/MTF/Projects/infra-poc-fronend/azure_agent_vnet
 # default
 MAKEFILES := 
 # environment
@@ -144,8 +136,8 @@ MOTD_SHOWN = pam
 ^F = $(notdir $^)
 # environment
 LC_TIME = en_NZ.UTF-8
-# environment
-INVOCATION_ID = 43957774359044c887b6936431c1ea47
+# makefile (from 'Makefile', line 2)
+istio_version = "1.13.7"
 # environment
 USERNAME = phiro
 # environment
@@ -166,12 +158,10 @@ GNUMAKEFLAGS :=
 BROWSER = firefox
 # environment
 LOGNAME = phiro
-# environment
-GIO_LAUNCHED_DESKTOP_FILE = /home/phiro/.local/share/applications/jetbrains-idea.desktop
 # makefile
 .DEFAULT_GOAL := create_user
 # environment
-SYSTEMD_EXEC_PID = 3728
+SYSTEMD_EXEC_PID = 3651
 # environment
 HISTCONTROL = ignoreboth:erasedups
 # environment
@@ -180,18 +170,10 @@ EDITOR = nano
 DISPLAY = :1
 # environment
 USER = phiro
-# environment
-TERMINAL_EMULATOR = JetBrains-JediTerm
 # default
 MAKE_VERSION := 4.3
 # environment
-MANAGERPID = 3542
-# environment
-TERM_SESSION_ID = 68526205-b063-4d33-8b04-71da2761fc09
-# environment
 LC_MEASUREMENT = en_NZ.UTF-8
-# environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 13143
 # environment
 PAGER = most
 # environment
@@ -201,7 +183,7 @@ LC_PAPER = en_NZ.UTF-8
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-JOURNAL_STREAM = 8:36060
+COLORTERM = truecolor
 # environment
 VISUAL = nano
 # environment
@@ -220,8 +202,6 @@ VSCODE_IPC_HOOK = /run/user/1000/vscode-7a77babe-1.69.2-main.sock
 TERM = xterm-256color
 # default
 .RECIPEPREFIX := 
-# environment
-GOFLAGS =  -mod=
 # automatic
 <F = $(notdir $<)
 # default
@@ -230,6 +210,8 @@ SUFFIXES :=
 VSCODE_CLI = 1
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+VTE_VERSION = 6800
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink guile load
 # environment
@@ -239,7 +221,7 @@ GDMSESSION = gnome
 # environment
 LC_IDENTIFICATION = en_NZ.UTF-8
 # variable set hash-table stats:
-# Load=114/1024=11%, Rehash=0, Collisions=7/144=5%
+# Load=104/1024=10%, Rehash=0, Collisions=11/134=8%
 
 # Pattern-specific Variable Values
 
@@ -247,9 +229,9 @@ LC_IDENTIFICATION = en_NZ.UTF-8
 
 # Directories
 
-# . (device 65024, inode 55184372): 19 files, no impossibilities.
+# . (device 65024, inode 55184372): 22 files, no impossibilities.
 
-# 19 files, no impossibilities in 1 directories.
+# 22 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -266,7 +248,7 @@ deploy_test:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 14):
+#  recipe to execute (from 'Makefile', line 15):
 	cd stack/kustomize && kubectl apply -k overlays/test
 
 app_build_all_release: app_build_gateway_release app_build_datasource_release
@@ -278,10 +260,7 @@ app_container_gateway:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
- 
-make: *** No rule to make target 'all'.  Stop.
-
-#  recipe to execute (from 'Makefile', line 49):
+#  recipe to execute (from 'Makefile', line 50):
 	docker build --build-arg path=apps --build-arg app_name=gateway -t phiroict/training_k8s_rust_gateway:$(version) -f infra/docker/Dockerfile  .
 	docker push phiroict/training_k8s_rust_gateway:$(version)
 
@@ -289,51 +268,71 @@ deploy_uat:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 16):
+#  recipe to execute (from 'Makefile', line 17):
 	cd stack/kustomize && kubectl apply -k overlays/uat
 
 create_user:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 4):
+#  recipe to execute (from 'Makefile', line 5):
 	bash ./create_certificate.sh "phiroict"
 
 undeploy_dev:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 21):
+#  recipe to execute (from 'Makefile', line 22):
 	cd stack/kustomize && kubectl delete -k overlays/dev
 
 deploy_dev:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 12):
+#  recipe to execute (from 'Makefile', line 13):
 	cd stack/kustomize && kubectl apply -k overlays/dev
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-08 09:00:37.008768561
+ 
+#  Last modified 2022-08-08 18:53:43.527179813
 #  File has been updated.
 #  Successfully updated.
+
+istio_extras:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 82):
+	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz 
+	tar xfv istio-$(istio_version)-linux-amd64.tar.gz
+	kubectl apply -f istio-$(istio_version)/samples/addons/
 
 minikube_podman:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 61):
+#  recipe to execute (from 'Makefile', line 62):
 	minikube config set rootless true
 	minikube start --driver podman --container-runtime containerd  --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
+
+istio_inject:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 77):
+	kubectl label namespace dev-applications istio-injection=enabled --overwrite
+	kubectl label namespace test-applications istio-injection=enabled --overwrite
+	kubectl label namespace uat-applications istio-injection=enabled --overwrite
+	kubectl label namespace prod-applications istio-injection=enabled --overwrite
 
 app_run_all:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 37):
+#  recipe to execute (from 'Makefile', line 38):
 	cd apps/gateway && nohup cargo run&
 	cd apps/datasource && nohup cargo run&
 
@@ -341,7 +340,7 @@ app_build_gateway_release:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 42):
+#  recipe to execute (from 'Makefile', line 43):
 	cd apps/gateway && cargo build --release
 
 minikube_kvm2:
@@ -356,14 +355,21 @@ docker_compose_run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 56):
+#  recipe to execute (from 'Makefile', line 57):
 	cd infra/docker && docker-compose up -d
+
+istio_init:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 75):
+	istioctl install --set profile=demo -y
 
 deploy_prod:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 18):
+#  recipe to execute (from 'Makefile', line 19):
 	cd stack/kustomize && kubectl apply -k overlays/prod
 
 minikube_virtualbox:
@@ -391,14 +397,14 @@ docker_compose_stop:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 58):
+#  recipe to execute (from 'Makefile', line 59):
 	cd infra/docker && docker-compose down
 
 app_init:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 26):
+#  recipe to execute (from 'Makefile', line 27):
 	rustup override set nightly
 	cargo install cargo-release
 	rustup component add clippy
@@ -408,14 +414,14 @@ app_build_datasource:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 34):
+#  recipe to execute (from 'Makefile', line 35):
 	cd apps/datasource && cargo build 
 
 minikube_docker:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 65):
+#  recipe to execute (from 'Makefile', line 66):
 	minikube start --driver docker  --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
 
@@ -423,28 +429,28 @@ create_sa_token_dashboard_admin:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 8):
+#  recipe to execute (from 'Makefile', line 9):
 	k apply -f sa_token_generation.yaml
 
 app_build_datasource_release:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 44):
+#  recipe to execute (from 'Makefile', line 45):
 	cd apps/datasource && cargo build --release
 
 app_build_gateway:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 32):
+#  recipe to execute (from 'Makefile', line 33):
 	cd apps/gateway && cargo build 
 
 app_container_datasource:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 52):
+#  recipe to execute (from 'Makefile', line 53):
 	docker build --build-arg path=apps --build-arg app_name=datasource -t phiroict/training_k8s_rust_datasource:$(version) -f infra/docker/Dockerfile  .
 	docker push phiroict/training_k8s_rust_datasource:$(version)
 
@@ -457,23 +463,23 @@ create_readonly_role_sa:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 6):
+#  recipe to execute (from 'Makefile', line 7):
 	k apply -f set-role-for-serviceaccount.yaml
 
 # files hash-table stats:
-# Load=29/1024=3%, Rehash=0, Collisions=0/45=0%
+# Load=32/1024=3%, Rehash=0, Collisions=0/48=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 49 / storage = 750 B / avg = 15 B
-# current buf: size = 8162 B / used = 750 B / count = 49 / avg = 15 B
+# strcache buffers: 1 (0) / strings = 55 / storage = 866 B / avg = 15 B
+# current buf: size = 8162 B / used = 866 B / count = 55 / avg = 15 B
 
-# strcache performance: lookups = 84 / hit rate = 41%
+# strcache performance: lookups = 93 / hit rate = 40%
 # hash-table stats:
-# Load=49/8192=1%, Rehash=0, Collisions=0/84=0%
-# Finished Make data base on Mon Aug  8 12:01:06 2022
+# Load=55/8192=1%, Rehash=0, Collisions=0/93=0%
+# Finished Make data base on Tue Aug  9 08:13:50 2022
 
  

@@ -11,11 +11,16 @@
 - make (or CMake)
 - istio
 - rustup / rustc
+- kvm2 / qemu (There are other virtualisation platforms you can use, check the `Minikube` section of the make file as how to create them - I have been using the kvm2 stack as it is opensource)
 
 Optional:
 - minikube
 
-
+### Setup 
+Flow of the setup is: 
+- [if using archlinux] run `make init_archlinux` [install make first or run the commandline from the makefile directly]
+- [other oses] install the stack above
+- Then run the `make provision_minikube` 
 
 # Preparation system
 

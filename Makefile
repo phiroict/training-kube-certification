@@ -1,5 +1,13 @@
 version="20220806.3"
 istio_version="1.13.7"
+# Archlinux setup
+init_archlinux:
+	sudo pacman -S istio kubectl make rustup minikube --needed
+	yay -S docker-machine-driver-kvm2 libvirt qemu-headless ebtables --needed
+	sudo systemctl enable libvirtd.service
+	sudo systemctl start libvirtd.service
+	sudo usermod -a -G libvirt $(whoami)
+	minikube config set driver kvm2
 # Kubernetes calls  --------------------------------------------------------------------------------------------------------------
 create_user:
 	bash ./create_certificate.sh "phiroict"
@@ -8,7 +16,11 @@ create_readonly_role_sa:
 create_sa_token_dashboard_admin:
 	k apply -f sa_token_generation.yaml
 
-## Deployment 
+## Deployment -------------------------------------------------------------------------------------------------------------------- 
+### Create namespaces first as we need to associate istio with it
+init_namespaces:
+	kubectl apply -f stack/namespace_init/namespaces.yaml
+### Deployments	
 deploy_dev:
 	cd stack/kustomize && kubectl apply -k overlays/dev
 deploy_test:
@@ -17,9 +29,16 @@ deploy_uat:
 	cd stack/kustomize && kubectl apply -k overlays/uat
 deploy_prod:
 	cd stack/kustomize && kubectl apply -k overlays/prod
-
+### Undeployments
 undeploy_dev:
 	cd stack/kustomize && kubectl delete -k overlays/dev
+undeploy_test:
+	cd stack/kustomize && kubectl delete -k overlays/dev
+undeploy_uat:
+	cd stack/kustomize && kubectl delete -k overlays/dev
+undeploy_prod:
+	cd stack/kustomize && kubectl delete -k overlays/dev
+
 
 # App builders -------------------------------------------------------------------------------------------------------------------
 ## Initialize (run only once in a while)
@@ -57,6 +76,8 @@ docker_compose_run:
 	cd infra/docker && docker-compose up -d
 docker_compose_stop:
 	cd infra/docker && docker-compose down
+
+# Minikube ----------------------------------------------------------------------------------------------------------------------------------------------------------
 ## Minikube start commands with several drivers
 minikube_podman:
 	minikube config set rootless true
@@ -71,6 +92,10 @@ minikube_virtualbox:
 minikube_kvm2:
 	minikube start --driver kvm2 --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
+minikube_delete:
+	minikube delete
+
+# Service mesh ----------------------------------------------------------------------------------------------------------------------------------------------------------
 istio_init:
 	istioctl install --set profile=demo -y
 istio_inject:
@@ -82,3 +107,8 @@ istio_extras:
 	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz 
 	tar xfv istio-$(istio_version)-linux-amd64.tar.gz
 	kubectl apply -f istio-$(istio_version)/samples/addons/
+
+# Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras
+
+bounce_minikube: minikube_delete provision_minikube

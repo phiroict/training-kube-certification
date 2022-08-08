@@ -1,0 +1,44 @@
+---
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    labels:
+      kubernetes.io/metadata.name: dev-applications
+      istio-injection: enabled 
+    name: dev-applications
+  spec:
+    finalizers:
+    - kubernetes
+---
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    labels:
+      kubernetes.io/metadata.name: test-applications
+      istio-injection: enabled 
+    name: test-applications
+  spec:
+    finalizers:
+    - kubernetes
+---
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    labels:
+      kubernetes.io/metadata.name: uat-applications
+      istio-injection: enabled 
+    name: uat-applications
+  spec:
+    finalizers:
+    - kubernetes
+---
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    labels:
+      kubernetes.io/metadata.name: prod-applications
+      istio-injection: enabled 
+    name: prod-applications
+  spec:
+    finalizers:
+    - kubernetes        
