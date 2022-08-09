@@ -1,4 +1,4 @@
-version="20220809.1"
+version="20220809.2"
 istio_version="1.13.7"
 # Archlinux setup
 init_archlinux:
