@@ -12,7 +12,7 @@ spec:
   selector:
     matchLabels:
       app: app-gateway
-  replicas: 5
+  replicas: 1
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -31,7 +31,7 @@ spec:
       containers:
       - name:  app-gateway
   
-        image: phiroict/training_k8s_rust_gateway:20220809.2
+        image: phiroict/training_k8s_rust_gateway:20220809.2_arm
         resources:
           requests:
             cpu: 500m
@@ -85,7 +85,7 @@ spec:
   selector:
     matchLabels:
       app: app-datasource
-  replicas: 2
+  replicas: 1
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -104,7 +104,7 @@ spec:
       containers:
       - name:  app-datasource
   
-        image: phiroict/training_k8s_rust_datasource:20220809.2
+        image: phiroict/training_k8s_rust_datasource:20220809.2_arm
         resources:
           requests:
             cpu: 500m

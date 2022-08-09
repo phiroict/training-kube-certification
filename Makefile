@@ -1,5 +1,6 @@
-version="20220809.2"
+version=20220809.2_arm
 istio_version="1.13.7"
+istio_version_arm=1.14.3
 # Archlinux setup
 init_archlinux:
 	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt --needed
@@ -98,6 +99,8 @@ minikube_delete:
 # Service mesh ----------------------------------------------------------------------------------------------------------------------------------------------------------
 istio_init:
 	istioctl install --set profile=demo -y
+istio_init_arm:
+	istioctl install --set profile=demo -y --set components.cni.enabled=true
 istio_inject:
 	kubectl label namespace dev-applications istio-injection=enabled --overwrite
 	kubectl label namespace test-applications istio-injection=enabled --overwrite
@@ -107,9 +110,16 @@ istio_extras:
 	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz 
 	tar xfv istio-$(istio_version)-linux-amd64.tar.gz
 	kubectl apply -f istio-$(istio_version)/samples/addons/
+	rm -f istio-$(istio_version)-linux-amd64.tar.gz
+istio_extras_arm:
+	wget https://github.com/istio/istio/releases/download/$(istio_version_arm)/istio-$(istio_version_arm)-osx-arm64.tar.gz
+	tar xfv istio-$(istio_version_arm)-osx-arm64.tar.gz
+	kubectl apply -f istio-$(istio_version_arm)/samples/addons/
+	rm -f istio-$(istio_version_arm)-osx-arm64.tar.gz
 
 # Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
 provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev
+provision_mac_arm_kube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev
 
 bounce_minikube: minikube_delete provision_minikube
 

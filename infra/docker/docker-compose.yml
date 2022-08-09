@@ -1,12 +1,12 @@
 ---
 services:
   gateway:
-    image: phiroict/training_k8s_rust_gateway:20220806.3
+    image: phiroict/training_k8s_rust_gateway:20220809.2_arm
     ports:
-    - "8100:8000"
+    - "8100:8001"
     environment:
-    - DATASOURCE_URL=dataset:8010
+    - DATASOURCE_URL=dataset:8010/data
   dataset:
-    image: phiroict/training_k8s_rust_datasource:20220806.3
+    image: phiroict/training_k8s_rust_datasource:20220809.2_arm
     ports:
     - "8110:8010"
