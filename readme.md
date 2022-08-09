@@ -10,6 +10,8 @@
  - Using a service mesh `istio` for zero trust inner service encryption.
  - Using encryption for ingoing connections (TLS / istio certs? )
  - Tests framework created in jmeter for content and saturation tests. 
+ - CI: Jenkins container (todo)
+ - CD: ArgoCD (todo)
   
 ## Stack
 - Linux system (this has been developed on a Arch linux machine, should work fine on other distros as well) 
