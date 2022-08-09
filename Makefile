@@ -2,7 +2,7 @@ version="20220809.2"
 istio_version="1.13.7"
 # Archlinux setup
 init_archlinux:
-	sudo pacman -S istio kubectl make rustup minikube docker --needed
+	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt --needed
 	yay -S docker-machine-driver-kvm2 libvirt qemu-headless ebtables --needed
 	sudo systemctl enable libvirtd.service
 	sudo systemctl start libvirtd.service

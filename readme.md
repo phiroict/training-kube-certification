@@ -1,5 +1,16 @@
 # Goal 
  This is a project that is built while studying for the K8s certification. 
+ It is a full stack project from application to deployment. 
+ This will include 
+ - Two applications in Rust using the Rocket webserver framework with a shared interface definition library and a template project.
+ - Kustomize: For having one codebase for kubernetes and a set of variations per environment
+ - Kubernetes: Several ways of using kubernetes in this project
+   - Build it yourselves with another [project](https://github.com/phiroict/training_k8s_cluster)
+   - Use minikube (See below)
+ - Using a service mesh `istio` for zero trust inner service encryption.
+ - Using encryption for ingoing connections (TLS / istio certs? )
+ - Tests framework created in jmeter for content and saturation tests. 
+  
 ## Stack
 - Linux system (this has been developed on a Arch linux machine, should work fine on other distros as well) 
   - MacOS -> This is now the ARM platform so many container images need to be build for this platform, this is out of scope for this training. Good luck.
@@ -12,9 +23,11 @@
 - istio
 - rustup / rustc
 - kvm2 / qemu (There are other virtualisation platforms you can use, check the `Minikube` section of the make file as how to create them - I have been using the kvm2 stack as it is opensource)
+- jmeter
 
 Optional:
 - minikube
+- wireshark
 
 ### Setup 
 Flow of the setup is: 
