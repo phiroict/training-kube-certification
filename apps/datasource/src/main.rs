@@ -31,7 +31,7 @@ impl Fairing for GatewayFairing {
         let path = req.uri();
         info!("Value of the path: {}", path.path().to_string());
 
-        if path.path() == "/gateway" {
+        if path.path() == "/data" {
             info!("Entering the gateway fairing processing on on_response");
             let current_time = Utc::now();
             let date_format = current_time.format("%Y%m%d_%H%M%S");
@@ -98,7 +98,7 @@ fn data_request(_data: Json<IncomingData>) -> Json<DataSet> {
     let data_set = DataSet {
         date: "20220806".to_string(),
         seq: _data.id + 9999,
-        name: target_url,
+        name: _data.name.to_string(),
         error: "".to_string(),
     };
     Json(data_set)
