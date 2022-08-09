@@ -1,8 +1,8 @@
-version="20220806.3"
+version="20220809.1"
 istio_version="1.13.7"
 # Archlinux setup
 init_archlinux:
-	sudo pacman -S istio kubectl make rustup minikube --needed
+	sudo pacman -S istio kubectl make rustup minikube docker --needed
 	yay -S docker-machine-driver-kvm2 libvirt qemu-headless ebtables --needed
 	sudo systemctl enable libvirtd.service
 	sudo systemctl start libvirtd.service
@@ -109,6 +109,12 @@ istio_extras:
 	kubectl apply -f istio-$(istio_version)/samples/addons/
 
 # Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
-provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev
 
 bounce_minikube: minikube_delete provision_minikube
+
+# Dashboards
+minikube_dashboard:
+	nohup minikube dashboard&
+kiali_dashboard:
+	nohup istioctl dashboard kiali&

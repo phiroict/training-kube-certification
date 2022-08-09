@@ -9,4 +9,10 @@ pub mod shared {
         pub name: String,
         pub error: String,
     }
+
+    #[derive(Serialize, Deserialize, Debug)]
+    pub struct IncomingData {
+        pub name: String,
+        pub id: u64,
+    }
 }

@@ -1,5 +1,5 @@
 #![allow(unused_mut)]
-use shared::shared::DataSet;
+use shared::shared::{IncomingData, DataSet};
 
 mod logging;
 use log::{error, info};
@@ -8,13 +8,10 @@ use rocket::fairing::{Fairing, Info, Kind};
 #[macro_use]
 extern crate rocket;
 
-use rocket::serde::{Serialize};
-use serde::Deserialize;
 use rocket::{Request, Response};
 use chrono::{Utc};
 use rocket::http::{Header, Status};
 use std::env;
-use reqwest::Error;
 use rocket::serde::json::Json;
 
 struct GatewayFairing {}
@@ -64,13 +61,13 @@ fn not_found(req: &Request) -> String {
     format!("[gw] I couldn't find '{}'. Try something else?", req.uri())
 }
 
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(crate = "rocket::serde")]
-struct IncomingData {
-    name: String,
-    id: u64,
+#[catch(422)]
+fn not_processable(req: &Request) -> String {
+    format!("[gw] I couldn't process data from call from '{}'. Try something else?", req.uri())
 }
+
+
+
 
 //health check for k8s
 #[get("/_status/healthz")]
@@ -91,8 +88,8 @@ async fn gateway(_data: Json<IncomingData>) -> Json<DataSet> {
             target_url = format!("http://{}", val);
         }
         Err(_err) => {
-            info!("Forwarding to default url {}", "datasource:8010");
-            target_url = "http://datasource:8010".to_string();
+            info!("Forwarding to default url {}", "datasource:8010/data");
+            target_url = "http://datasource:8010/data".to_string();
             ()
         }
     }
@@ -103,18 +100,14 @@ async fn gateway(_data: Json<IncomingData>) -> Json<DataSet> {
         .send()
         .await;
     let call_response = match res {
-        Ok(res) => {
-            DataSet {
-                date: "20220807".to_string(),
-                seq: 1,
-                name: "OK".to_string(),
-                error: "".to_string()
-            }
+        Ok(_res) => {
+            let _body = _res.json::<DataSet>().await.unwrap();
+            _body
         }
         Err(error) => {
             DataSet {
                 date: "20220807".to_string(),
-                seq: 2,
+                seq: 0,
                 name: "NOK".to_string(),
                 error: format!("Call failed reason: {}", error.to_string())
             }
@@ -133,7 +126,7 @@ async fn main() {
     let process = rocket::build()
         .attach(fairing)
         .mount("/", routes![gateway,healthcheck])
-        .register("/gateway", catchers![internal_error, not_found])
+        .register("/gateway", catchers![internal_error, not_found,not_processable])
         .launch()
         .await;
     match process {

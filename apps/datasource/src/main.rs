@@ -1,5 +1,5 @@
 #![allow(unused_mut)]
-use shared::shared::DataSet;
+use shared::shared::{IncomingData, DataSet};
 
 mod logging;
 use log::{error, info};
@@ -62,6 +62,12 @@ fn not_found(req: &Request) -> String {
     format!("[gw] I couldn't find '{}'. Try something else?", req.uri())
 }
 
+#[catch(422)]
+fn not_processable(req: &Request) -> String {
+    format!("[gw] I couldn't process data from call from '{}'. Try something else?", req.uri())
+}
+
+
 //health check for k8s
 #[get("/_status/healthz")]
 fn healthcheck() -> Status {
@@ -74,7 +80,7 @@ fn healthcheck() -> Status {
 //Processor
 
 #[post("/data", format="json", data="<_data>")]
-fn data_request(_data: Json<DataSet>) -> Json<DataSet> {
+fn data_request(_data: Json<IncomingData>) -> Json<DataSet> {
     let identity_url = env::var("DATASOURCE_URL");
     let mut target_url;
     match identity_url {
@@ -91,7 +97,7 @@ fn data_request(_data: Json<DataSet>) -> Json<DataSet> {
     info!("Redirecting to url {}", format!("{}",target_url));
     let data_set = DataSet {
         date: "20220806".to_string(),
-        seq: _data.seq + 9999,
+        seq: _data.id + 9999,
         name: target_url,
         error: "".to_string(),
     };
@@ -108,7 +114,7 @@ async fn main() {
     let process = rocket::build()
         .attach(fairing)
         .mount("/", routes![data_request,healthcheck])
-        .register("/data", catchers![internal_error, not_found])
+        .register("/data", catchers![internal_error, not_found, not_processable])
         .launch()
         .await;
     match process {

@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/apps/datasource/datasource.iml" filepath="$PROJECT_DIR$/apps/datasource/datasource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/apps/gateway/gateway.iml" filepath="$PROJECT_DIR$/apps/gateway/gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/training-kube-certification.iml" filepath="$PROJECT_DIR$/.idea/training-kube-certification.iml" />
     </modules>
   </component>
