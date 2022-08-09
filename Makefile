@@ -1,5 +1,5 @@
-version=20220809.2_arm
-istio_version="1.13.7"
+version=20220810.1
+istio_version=1.13.7
 istio_version_arm=1.14.3
 # Archlinux setup
 init_archlinux:
