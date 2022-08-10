@@ -90,7 +90,9 @@ More info about [minikube](https://minikube.sigs.k8s.io/docs/)
 This is a complete stack development. This chapter will move to some of the design choices.
 
 ## Main flow
-![Main flow ](docs/images/High level kubernetes flow.png)
+
+![Main flow](docs/images/High_level_kubernetes_flow.png)
+
 ## Application flow
 From the apps folder we have two applications that are the applications that will run on the pods.  
 They are created from a template service project `service_template` setting up things like logging and
@@ -98,7 +100,7 @@ some configuration of the Rust / Rocket configuration.
 
 The interface contract are captured in the Interface contract library: `application_interfaces` these
 are used by both services.
-![Main flow ](docs/images/Rust component configuration.png)
+![Main flow ](docs/images/Rust_component_configuration.png)
 
 
 
