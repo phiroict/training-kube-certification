@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.3
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Aug  9 08:13:50 2022
+# Make data base, printed on Wed Aug 10 08:16:01 2022
 
 # Variables
 
@@ -48,6 +46,8 @@ PWD = /home/phiro/IdeaProjects/training-kube-certification
 MAIL = /var/spool/mail/phiro
 # environment
 XDG_DATA_DIRS = /home/phiro/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+# environment
+OLDPWD = /home/phiro/IdeaProjects
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # automatic
@@ -87,13 +87,13 @@ MAKEFILE_LIST := Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 14906
+VSCODE_PID = 28219
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/philip-precision7740:@/tmp/.ICE-unix/3635,unix/philip-precision7740:/tmp/.ICE-unix/3635
+SESSION_MANAGER = local/philip-precision7740:@/tmp/.ICE-unix/3901,unix/philip-precision7740:/tmp/.ICE-unix/3901
 # automatic
 *F = $(notdir $*)
 # environment
@@ -111,7 +111,7 @@ MAKE_HOST := x86_64-pc-linux-gnu
 # makefile
 SHELL = /bin/sh
 # makefile (from 'Makefile', line 1)
-version = "20220806.3"
+version = "20220809.2"
 # default
 MAKECMDGOALS := all
 # environment
@@ -119,7 +119,7 @@ XMODIFIERS = @im=ibus
 # environment
 SHLVL = 2
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/3460469b_8a8d_4771_8782_19798e59c559
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/12cbde22_1746_4fca_b2ec_86cef57243c7
 # environment
 MAKELEVEL := 0
 # default
@@ -159,9 +159,9 @@ BROWSER = firefox
 # environment
 LOGNAME = phiro
 # makefile
-.DEFAULT_GOAL := create_user
+.DEFAULT_GOAL := init_archlinux
 # environment
-SYSTEMD_EXEC_PID = 3651
+SYSTEMD_EXEC_PID = 3917
 # environment
 HISTCONTROL = ignoreboth:erasedups
 # environment
@@ -221,7 +221,7 @@ GDMSESSION = gnome
 # environment
 LC_IDENTIFICATION = en_NZ.UTF-8
 # variable set hash-table stats:
-# Load=104/1024=10%, Rehash=0, Collisions=11/134=8%
+# Load=105/1024=10%, Rehash=0, Collisions=11/135=8%
 
 # Pattern-specific Variable Values
 
@@ -229,9 +229,9 @@ LC_IDENTIFICATION = en_NZ.UTF-8
 
 # Directories
 
-# . (device 65024, inode 55184372): 22 files, no impossibilities.
+# . (device 65024, inode 55184372): 24 files, no impossibilities.
 
-# 22 files, no impossibilities in 1 directories.
+# 24 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -248,7 +248,7 @@ deploy_test:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 15):
+#  recipe to execute (from 'Makefile', line 27):
 	cd stack/kustomize && kubectl apply -k overlays/test
 
 app_build_all_release: app_build_gateway_release app_build_datasource_release
@@ -260,7 +260,7 @@ app_container_gateway:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 50):
+#  recipe to execute (from 'Makefile', line 69):
 	docker build --build-arg path=apps --build-arg app_name=gateway -t phiroict/training_k8s_rust_gateway:$(version) -f infra/docker/Dockerfile  .
 	docker push phiroict/training_k8s_rust_gateway:$(version)
 
@@ -268,35 +268,37 @@ deploy_uat:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 17):
+#  recipe to execute (from 'Makefile', line 29):
 	cd stack/kustomize && kubectl apply -k overlays/uat
 
 create_user:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 5):
+#  recipe to execute (from 'Makefile', line 13):
 	bash ./create_certificate.sh "phiroict"
+
+ 
+make: *** No rule to make target 'all'.  Stop.
 
 undeploy_dev:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 22):
+#  recipe to execute (from 'Makefile', line 34):
 	cd stack/kustomize && kubectl delete -k overlays/dev
 
 deploy_dev:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 13):
+#  recipe to execute (from 'Makefile', line 25):
 	cd stack/kustomize && kubectl apply -k overlays/dev
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
- 
-#  Last modified 2022-08-08 18:53:43.527179813
+#  Last modified 2022-08-09 15:33:33.338250057
 #  File has been updated.
 #  Successfully updated.
 
@@ -304,7 +306,7 @@ istio_extras:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 82):
+#  recipe to execute (from 'Makefile', line 107):
 	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz 
 	tar xfv istio-$(istio_version)-linux-amd64.tar.gz
 	kubectl apply -f istio-$(istio_version)/samples/addons/
@@ -313,7 +315,7 @@ minikube_podman:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 62):
+#  recipe to execute (from 'Makefile', line 83):
 	minikube config set rootless true
 	minikube start --driver podman --container-runtime containerd  --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
@@ -322,7 +324,7 @@ istio_inject:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 77):
+#  recipe to execute (from 'Makefile', line 102):
 	kubectl label namespace dev-applications istio-injection=enabled --overwrite
 	kubectl label namespace test-applications istio-injection=enabled --overwrite
 	kubectl label namespace uat-applications istio-injection=enabled --overwrite
@@ -332,7 +334,7 @@ app_run_all:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 38):
+#  recipe to execute (from 'Makefile', line 57):
 	cd apps/gateway && nohup cargo run&
 	cd apps/datasource && nohup cargo run&
 
@@ -340,43 +342,67 @@ app_build_gateway_release:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 43):
+#  recipe to execute (from 'Makefile', line 62):
 	cd apps/gateway && cargo build --release
+
+minikube_delete:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 96):
+	minikube delete
+
+kiali_dashboard:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 120):
+	nohup istioctl dashboard kiali&
 
 minikube_kvm2:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 72):
+#  recipe to execute (from 'Makefile', line 93):
 	minikube start --driver kvm2 --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
+
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 docker_compose_run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 57):
+#  recipe to execute (from 'Makefile', line 76):
 	cd infra/docker && docker-compose up -d
+
+bounce_minikube: minikube_delete provision_minikube
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 istio_init:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 75):
+#  recipe to execute (from 'Makefile', line 100):
 	istioctl install --set profile=demo -y
 
 deploy_prod:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 19):
+#  recipe to execute (from 'Makefile', line 31):
 	cd stack/kustomize && kubectl apply -k overlays/prod
 
 minikube_virtualbox:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 69):
+#  recipe to execute (from 'Makefile', line 90):
 	minikube start --driver virtualbox --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
 
@@ -397,31 +423,38 @@ docker_compose_stop:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 59):
+#  recipe to execute (from 'Makefile', line 78):
 	cd infra/docker && docker-compose down
 
 app_init:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 27):
+#  recipe to execute (from 'Makefile', line 46):
 	rustup override set nightly
 	cargo install cargo-release
 	rustup component add clippy
 	rustup component add rustfmt
 
+minikube_dashboard:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 118):
+	nohup minikube dashboard&
+
 app_build_datasource:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 35):
+#  recipe to execute (from 'Makefile', line 54):
 	cd apps/datasource && cargo build 
 
 minikube_docker:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 66):
+#  recipe to execute (from 'Makefile', line 87):
 	minikube start --driver docker  --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
 
@@ -429,57 +462,97 @@ create_sa_token_dashboard_admin:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 9):
+#  recipe to execute (from 'Makefile', line 17):
 	k apply -f sa_token_generation.yaml
+
+undeploy_test:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 36):
+	cd stack/kustomize && kubectl delete -k overlays/dev
 
 app_build_datasource_release:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 45):
+#  recipe to execute (from 'Makefile', line 64):
 	cd apps/datasource && cargo build --release
 
 app_build_gateway:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 33):
+#  recipe to execute (from 'Makefile', line 52):
 	cd apps/gateway && cargo build 
 
 app_container_datasource:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 53):
+#  recipe to execute (from 'Makefile', line 72):
 	docker build --build-arg path=apps --build-arg app_name=datasource -t phiroict/training_k8s_rust_datasource:$(version) -f infra/docker/Dockerfile  .
 	docker push phiroict/training_k8s_rust_datasource:$(version)
+
+undeploy_uat:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 38):
+	cd stack/kustomize && kubectl delete -k overlays/dev
+
+init_archlinux:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 5):
+	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt --needed
+	yay -S docker-machine-driver-kvm2 libvirt qemu-headless ebtables --needed
+	sudo systemctl enable libvirtd.service
+	sudo systemctl start libvirtd.service
+	sudo usermod -a -G libvirt $(whoami)
+	minikube config set driver kvm2
+
+undeploy_prod:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 40):
+	cd stack/kustomize && kubectl delete -k overlays/dev
 
 app_build_all: app_build_gateway app_build_datasource
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
+init_namespaces:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 22):
+	kubectl apply -f stack/namespace_init/namespaces.yaml
+
 create_readonly_role_sa:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 7):
+#  recipe to execute (from 'Makefile', line 15):
 	k apply -f set-role-for-serviceaccount.yaml
 
 # files hash-table stats:
-# Load=32/1024=3%, Rehash=0, Collisions=0/48=0%
+# Load=42/1024=4%, Rehash=0, Collisions=1/66=2%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 55 / storage = 866 B / avg = 15 B
-# current buf: size = 8162 B / used = 866 B / count = 55 / avg = 15 B
+# strcache buffers: 1 (0) / strings = 67 / storage = 1068 B / avg = 15 B
+# current buf: size = 8162 B / used = 1068 B / count = 67 / avg = 15 B
 
-# strcache performance: lookups = 93 / hit rate = 40%
+# strcache performance: lookups = 123 / hit rate = 45%
 # hash-table stats:
-# Load=55/8192=1%, Rehash=0, Collisions=0/93=0%
-# Finished Make data base on Tue Aug  9 08:13:50 2022
+# Load=67/8192=1%, Rehash=0, Collisions=0/123=0%
+# Finished Make data base on Wed Aug 10 08:16:01 2022
 
  
