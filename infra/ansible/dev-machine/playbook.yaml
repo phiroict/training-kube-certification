@@ -1,0 +1,31 @@
+---
+- name: devmachine_provisioner
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Install pacman tools
+      pacman:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - minikube
+        - kubectl
+        - docker 
+        - podman
+        - archlinux-keyring
+        - qemu 
+        - virt-manager 
+        - virt-viewer 
+        - dnsmasq 
+        - vde2 
+        - bridge-utils 
+        - gnu-netcat
+        - rustup
+        - istio
+        - git
+        - kustomize
+        - rustup
+        - wireshark-qt
+    - name: Install rust
+      shell: rustup install stable
+      become_user: phiro

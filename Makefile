@@ -11,6 +11,9 @@ init_archlinux:
 	sudo systemctl start libvirtd.service
 	sudo usermod -a -G libvirt $(whoami)
 	minikube config set driver kvm2
+init_ansible:
+	sudo pacman -S ansible --needed
+	ansible-playbook --ask-become-pass -c local infra/ansible/dev-machine/playbook.yaml
 # Kubernetes calls  --------------------------------------------------------------------------------------------------------------
 create_user:
 	bash ./create_certificate.sh "phiroict"

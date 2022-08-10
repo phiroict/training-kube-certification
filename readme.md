@@ -1,6 +1,9 @@
+__TOC__
+
 # Goal 
  This is a project that is built while studying for the K8s certification. 
  It is a full stack project from application to deployment. 
+
  This will include 
  - Two applications in Rust using the Rocket webserver framework with a shared interface definition library and a template project.
  - Kustomize: For having one codebase for kubernetes and a set of variations per environment
@@ -13,16 +16,19 @@
  - CI: Jenkins container (todo)
  - CD: ArgoCD (todo)
   
-## Stack
+
+
+# Stack
 - Linux system (this has been developed on a Arch linux machine, should work fine on other distros as well) 
   - MacOS -> This is now the ARM platform so many container images need to be build for this platform, this is out of scope for this training. Good luck.
   - MacOS and Windows use VM when running docker containers so this solution may not work without faffing network settings, again, outside scope and again, Good luck.
+  - For archlinux there is an ansible configuration playbook at `infra/ansible/dev-machine/playbook.yaml`, ran from the `make init_ansible` task.
 - git
 - kubectl
 - kubernetes cluster 
 - kustomize
 - make (or CMake)
-- istio
+- istio (It will be overwritten during some of the make tasks, this is just for bootstrapping)
 - rustup / rustc
 - kvm2 / qemu (There are other virtualisation platforms you can use, check the `Minikube` section of the make file as how to create them - I have been using the kvm2 stack as it is opensource)
 - jmeter
@@ -31,13 +37,13 @@ Optional:
 - minikube
 - wireshark
 
-### Setup 
+# Implementation
+
+## Setup 
 Flow of the setup is: 
 - [if using archlinux] run `make init_archlinux` [install make first or run the commandline from the makefile directly]
 - [other oses] install the stack above
 - Then run the `make provision_minikube` 
-
-# Preparation system
 
 ## Short cuts 
 For the examples add: 
@@ -49,13 +55,13 @@ to your  `.profile` or `.bashrc` or equivalent.
 ## Local machine
 [Arch linux] To use the opensource kvm2 version of minikube, follow the [instructions](`https://gist.github.com/grugnog/caa118205ad498423266f26150a5d555`) 
 
-# Kubernetes
+## Kubernetes
 
-## Build cluster yourself
+### Build cluster yourself
 There is a project to set up a complete cluster : `https://github.com/phiroict/training_k8s_cluster` you can use to create a cluster yourself. There are many more ways to create a cluster, this is one of them.
 
 
-## Use minikube. 
+### Use minikube. 
 If you are less interested in the inner workings of kubernetes, you can use minikube, a cluster you can run locally on a machine with at least 36 GiB RAM. 
 In the make file there are four ways to create these minikube stacks 
 
@@ -82,7 +88,7 @@ More info about [minikube](https://minikube.sigs.k8s.io/docs/)
 
 
 
- 
+# Appendixes 
 ## Convenient commands 
 
 ### set namespace default 
