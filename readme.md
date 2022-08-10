@@ -1,5 +1,3 @@
-__TOC__
-
 # Goal 
  This is a project that is built while studying for the K8s certification. 
  It is a full stack project from application to deployment. 
@@ -37,7 +35,9 @@ Optional:
 - minikube
 - wireshark
 
-# Implementation
+
+
+# Implementation setup
 
 ## Setup 
 Flow of the setup is: 
@@ -85,6 +85,20 @@ These create the stack on several virtualization platforms. If you are an experi
 were the three I tested it on.
 More info [here](https://minikube.sigs.k8s.io/docs/drivers/)  
 More info about [minikube](https://minikube.sigs.k8s.io/docs/)  
+
+# Design and use
+This is a complete stack development. This chapter will move to some of the design choices.
+
+## Main flow
+![Main flow ](docs/images/High level kubernetes flow.png)
+## Application flow
+From the apps folder we have two applications that are the applications that will run on the pods.  
+They are created from a template service project `service_template` setting up things like logging and
+some configuration of the Rust / Rocket configuration.
+
+The interface contract are captured in the Interface contract library: `application_interfaces` these
+are used by both services.
+![Main flow ](docs/images/Rust component configuration.png)
 
 
 
