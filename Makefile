@@ -1,6 +1,8 @@
 version=20220810.1
-istio_version=1.13.7
+istio_version=1.14.3
 istio_version_arm=1.14.3
+nginx_ingress_controller_version=1.3.0
+
 # Archlinux setup
 init_archlinux:
 	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt --needed
@@ -107,10 +109,13 @@ istio_inject:
 	kubectl label namespace uat-applications istio-injection=enabled --overwrite
 	kubectl label namespace prod-applications istio-injection=enabled --overwrite
 istio_extras:
-	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz 
+	rm -rf istio-$(istio_version)
+	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz
 	tar xfv istio-$(istio_version)-linux-amd64.tar.gz
 	kubectl apply -f istio-$(istio_version)/samples/addons/
 	rm -f istio-$(istio_version)-linux-amd64.tar.gz
+	sudo cp -pf istio-$(istio_version)/bin/istioctl  /usr/bin/istioctl
+	# kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v$(nginx_ingress_controller_version)/deploy/static/provider/cloud/deploy.yaml
 istio_extras_arm:
 	wget https://github.com/istio/istio/releases/download/$(istio_version_arm)/istio-$(istio_version_arm)-osx-arm64.tar.gz
 	tar xfv istio-$(istio_version_arm)-osx-arm64.tar.gz
