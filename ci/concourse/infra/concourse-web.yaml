@@ -110,12 +110,19 @@ metadata:
 spec:
   selector:
     app: concourse-web
-  type: ClusterIP
+  type: NodePort
   sessionAffinity: None
   sessionAffinityConfig:
     clientIP:
       timeoutSeconds: 10800
   ports:
+  - name: cwsnc
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+    nodePort: 32080
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.
   - name: cws
     protocol: TCP
     port: 8443
@@ -126,5 +133,17 @@ spec:
     protocol: TCP
     port: 2222
     targetPort: 2222
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.  - name: cwws
+  - name: garden
+    protocol: TCP
+    port: 7777
+    targetPort: 7777
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.  - name: garden
+  - name: bagageclaim
+    protocol: TCP
+    port: 7788
+    targetPort: 7788
     # If you set the `spec.type` field to `NodePort` and you want a specific port number,
     # you can specify a value in the `spec.ports[*].nodePort` field.

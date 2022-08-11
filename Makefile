@@ -125,11 +125,6 @@ istio_extras_arm:
 	kubectl apply -f istio-$(istio_version_arm)/samples/addons/
 	rm -f istio-$(istio_version_arm)-osx-arm64.tar.gz
 
-# Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
-provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev
-provision_mac_arm_kube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev
-
-bounce_minikube: minikube_delete provision_minikube
 
 # Dashboards
 minikube_dashboard:
@@ -164,3 +159,9 @@ concourse_create:
 concourse_delete:
 	cd ci/concourse/infra && kubectl delete -k .
 concourse_all: concourse_init concourse_keygen concourse_create
+
+# Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_all
+provision_mac_arm_kube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev
+
+bounce_minikube: minikube_delete provision_minikube

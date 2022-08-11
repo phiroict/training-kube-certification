@@ -5,3 +5,4 @@ resources:
 - postgress.yaml
 - concourse-web.yaml
 - concourse-workers.yaml
+- concourse-ingress.yaml

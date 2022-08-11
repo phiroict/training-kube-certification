@@ -1,0 +1,19 @@
+---
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: concource-ingress
+    namespace: ci
+  spec:
+    ingressClassName: nginx-default
+    rules:
+    - host: concourse.info
+      http:
+        paths:
+          - path: /cc/
+            pathType: Prefix
+            backend:
+              service:
+                name: concourse-web-service
+                port:
+                  number: 8080

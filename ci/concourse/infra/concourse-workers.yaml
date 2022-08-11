@@ -28,21 +28,15 @@ spec:
       - name:  concourse-worker
         image:  "concourse/concourse:7.8.2-ubuntu-20220725"
         args: ["worker"]
+        securityContext:
+          privileged: true
         resources:
           requests:
             cpu: 100m
-            memory: 100Mi
+            memory: 500Mi
           limits:
             cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          tcpSocket:
-            port: 2222
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
+            memory: 500Mi
         env:
         - name: CONCOURSE_WORK_DIR
           value: /opt/concourse/worker
