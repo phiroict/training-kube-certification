@@ -139,9 +139,11 @@ kiali_dashboard:
 
 # CI
 concourse_init:
+	rm -f concourse-*-linux-amd64.tgz*
 	wget https://github.com/concourse/concourse/releases/download/v$(concourse_version)/concourse-$(concourse_version)-linux-amd64.tgz
 	tar -xzvf concourse-$(concourse_version)-linux-amd64.tgz
 	kubectl apply -f ci/concourse/infra/concourse-namespace.yaml
+	mkdir -p ci/concourse/secrets
 concourse_keygen:
 	cd concourse/bin && ./concourse generate-key -t rsa -f ../../ci/concourse/secrets/session_signing_key
 	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/tsa_host_key
@@ -161,3 +163,4 @@ concourse_create:
 	cd ci/concourse/infra && kubectl apply -k .
 concourse_delete:
 	cd ci/concourse/infra && kubectl delete -k .
+concourse_all: concourse_init concourse_keygen concourse_create

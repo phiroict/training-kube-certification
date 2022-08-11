@@ -106,6 +106,15 @@ are used by both services.
 ## CI 
 
 We use a tool concourse that runs in its own namespace. 
+It is created separately by the following make tasks
+
+| make task        | description                                                                                                                                                                      |
+|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| concourse_init   | Run once to download concourse and create the `ci` namespace                                                                                                                     | 
+| concourse_keygen | Generate the keys we use for setting up the stack, you need to run this before any `concourse_create` as the secrets are deleted from the system after applying it to kubernetes | 
+| concourse_create | Create the stack, assumes `concource_init` and `concourse_keygen` have run                                                                                                       |
+| concourse_delete | Clean up the stack except the `ci` namespace                                                                                                                                     |
+| concourse_all | Runs concourse_init, keygen and create in one go for convenience |
 
 # Appendixes 
 ## Convenient commands 

@@ -37,18 +37,9 @@ spec:
             memory: 100Mi
         livenessProbe:
           tcpSocket:
-            port: 80
+            port: 2222
           initialDelaySeconds: 5
           timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /_status/healthz
-            port: 80
-          initialDelaySeconds: 5
-          timeoutSeconds: 2
           successThreshold: 1
           failureThreshold: 3
           periodSeconds: 10
@@ -58,24 +49,33 @@ spec:
         - name: CONCOURSE_TSA_HOST
           value: concourse-web-service:2222
         - name: CONCOURSE_TSA_PUBLIC_KEY
-          valueFrom:
-            secretKeyRef:
-              name: tsa-host-public
-              key: tsa_host_key.pub
+          value: "/opt/hostkeypub/tsa_host_key.pub"
         - name: CONCOURSE_TSA_WORKER_PRIVATE_KEY
-          valueFrom:
-            secretKeyRef:
-              name: worker-private 
-              key: worker_key
+          value: "/opt/workerkey/worker_key"
         ports:
         - containerPort:  2222
           name:  con-worker
         volumeMounts:
         - name: localtime
           mountPath: /etc/localtime
+        - name: hostkeypub
+          mountPath: "/opt/hostkeypub"
+          readOnly: true
+        - name: workerkeypriv
+          mountPath: "/opt/workerkey"
+          readOnly: true
+
       volumes:
         - name: localtime
           hostPath:
-            path: /usr/share/zoneinfo/Asia/Shanghai
+            path: /usr/share/zoneinfo/Pacific/Aucklland
+        - name: hostkeypub
+          secret:
+            secretName: tsa-host-public
+            optional: false
+        - name: workerkeypriv
+          secret:
+            secretName: worker-private
+            optional: false
       restartPolicy: Always
       
