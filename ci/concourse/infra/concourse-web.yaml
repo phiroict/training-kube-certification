@@ -26,7 +26,8 @@ spec:
           # - Each init container must complete successfully before the next one starts.
       containers:
       - name:  concourse-web
-        image:  concourse/concourse
+        image:  "concourse/concourse:7.8.2-ubuntu-20220725"
+        args: ["web"]
         resources:
           requests:
             cpu: 1000m
@@ -57,20 +58,11 @@ spec:
         - name: CONCOURSE_MAIN_TEAM_LOCAL_USER
           value: phiro
         - name: CONCOURSE_SESSION_SIGNING_KEY
-          valueFrom:
-            secretKeyRef:
-              name: session-signing
-              key: session_signing_key
+          value: "/opt/session-signing/session_signing_key"
         - name: CONCOURSE_TSA_HOST_KEY
-          valueFrom:
-            secretKeyRef:
-              name: tsa-host-private 
-              key: tsa_host_key
+          value: "/opt/hostkeys/tsa_host_key"
         - name: CONCOURSE_TSA_AUTHORIZED_KEYS
-          valueFrom:
-            secretKeyRef:
-              name: worker-public
-              key: worker_key.pub
+          value: "/opt/keys/worker_key.pub"
         - name: CONCOURSE_POSTGRES_HOST
           value: postgres
         - name: CONCOURSE_POSTGRES_PORT
@@ -78,22 +70,45 @@ spec:
         - name: CONCOURSE_POSTGRES_DATABASE
           value: atc
         - name: CONCOURSE_POSTGRES_USER
-          value: postgres
+          value: concourse
         - name: CONCOURSE_POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret-config
-              key: password
+          value: password
+#          valueFrom:
+#            secretKeyRef:
+#              name: postgres-secret-config
+#              key: password
         ports:
         - containerPort:  443
           name:  concourse-web
         volumeMounts:
         - name: localtime
           mountPath: /etc/localtime
+        - name: keys
+          mountPath: "/opt/keys"
+          readOnly: true
+        - name: hostkey
+          mountPath: "/opt/hostkeys"
+          readOnly: true
+        - name: sessionsign
+          mountPath: "/opt/session-signing"
+          readOnly: true
       volumes:
         - name: localtime
           hostPath:
             path: /usr/share/zoneinfo/Asia/Shanghai
+        - name: keys
+          secret:
+            secretName: worker-public
+            optional: false
+        - name: hostkey
+          secret:
+            secretName: tsa-host-private
+            optional: false
+        - name: sessionsign
+          secret:
+            secretName: session-signing
+            optional: false
+
       restartPolicy: Always
 ---
 apiVersion: v1

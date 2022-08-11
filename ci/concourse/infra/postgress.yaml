@@ -6,7 +6,7 @@ metadata:
   namespace: ci
 type: Opaque
 data:
- password: cG9zdGdyZXMK
+ password: cGFzc3dvcmQ=
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -64,11 +64,17 @@ spec:
         ports:
         - containerPort: 5432
         env:
+        - name: POSTGRES_DB
+          value: atc
+        - name: POSTGRES_USER
+          value: concourse
         - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret-config
-              key: password
+          value: password
+#        - name: POSTGRES_PASSWORD
+#          valueFrom:
+#            secretKeyRef:
+#              name: postgres-secret-config
+#              key: password
         - name: PGDATA
           value: /var/lib/postgresql/data/pgdata
         volumeMounts:

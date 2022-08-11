@@ -103,6 +103,10 @@ The interface contract are captured in the Interface contract library: `applicat
 are used by both services.  
 ![Main flow ](docs/images/Rust_component_configuration.png)
 
+## CI 
+
+We use a tool concourse that runs in its own namespace. 
+
 # Appendixes 
 ## Convenient commands 
 

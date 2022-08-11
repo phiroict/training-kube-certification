@@ -159,3 +159,5 @@ concourse_keygen:
 	rm -f ci/concourse/secrets/*
 concourse_create:
 	cd ci/concourse/infra && kubectl apply -k .
+concourse_delete:
+	cd ci/concourse/infra && kubectl delete -k .

@@ -26,7 +26,8 @@ spec:
           # - Each init container must complete successfully before the next one starts.
       containers:
       - name:  concourse-worker
-        image:  concourse/concourse
+        image:  "concourse/concourse:7.8.2-ubuntu-20220725"
+        args: ["worker"]
         resources:
           requests:
             cpu: 100m
