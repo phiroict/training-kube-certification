@@ -27,8 +27,6 @@ spec:
       containers:
       - name:  concourse-worker
         image:  concourse/concourse
-        command:
-          - "worker"          
         resources:
           requests:
             cpu: 100m

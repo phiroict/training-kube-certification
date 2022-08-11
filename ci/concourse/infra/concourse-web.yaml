@@ -84,8 +84,6 @@ spec:
             secretKeyRef:
               name: postgres-secret-config
               key: password
-        command:
-          - "web"
         ports:
         - containerPort:  443
           name:  concourse-web
