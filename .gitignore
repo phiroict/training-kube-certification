@@ -1,4 +1,6 @@
+ci/jenkins/agent-smith
 secret*
 **/target/*
 istio*
 nohup.out
+*.tgz

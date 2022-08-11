@@ -90,6 +90,7 @@ More info about [minikube](https://minikube.sigs.k8s.io/docs/)
 This is a complete stack development. This chapter will move to some of the design choices.
 
 ## Main flow
+In the whole stack these are the main components. Some of the details are omitted, we get to them later. 
 
 ![Main flow](docs/images/High_level_kubernetes_flow.png)
 
@@ -99,10 +100,8 @@ They are created from a template service project `service_template` setting up t
 some configuration of the Rust / Rocket configuration.
 
 The interface contract are captured in the Interface contract library: `application_interfaces` these
-are used by both services.
+are used by both services.  
 ![Main flow ](docs/images/Rust_component_configuration.png)
-
-
 
 # Appendixes 
 ## Convenient commands 

@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  concourse-web
+  namespace: ci
+  labels:
+    app:  concourse-web
+spec:
+  selector:
+    matchLabels:
+      app: concourse-web
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  concourse-web
+    spec:
+      # initContainers:
+        # Init containers are exactly like regular containers, except:
+          # - Init containers always run to completion.
+          # - Each init container must complete successfully before the next one starts.
+      containers:
+      - name:  concourse-web
+        image:  concourse/concourse
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 2000Mi
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /_status/healthz
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        env:
+        - name: CONCOURSE_ADD_LOCAL_USER
+          value: phiro:password
+        - name: CONCOURSE_MAIN_TEAM_LOCAL_USER
+          value: phiro
+        - name: CONCOURSE_SESSION_SIGNING_KEY
+          valueFrom:
+            secretKeyRef:
+              name: session-signing
+              key: session_signing_key
+        - name: CONCOURSE_TSA_HOST_KEY
+          valueFrom:
+            secretKeyRef:
+              name: tsa-host-private 
+              key: tsa_host_key
+        - name: CONCOURSE_TSA_AUTHORIZED_KEYS
+          valueFrom:
+            secretKeyRef:
+              name: worker-public
+              key: worker_key.pub
+        - name: CONCOURSE_POSTGRES_HOST
+          value: postgres
+        - name: CONCOURSE_POSTGRES_PORT
+          value: "5432"
+        - name: CONCOURSE_POSTGRES_DATABASE
+          value: atc
+        - name: CONCOURSE_POSTGRES_USER
+          value: postgres
+        - name: CONCOURSE_POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret-config
+              key: password
+        command:
+          - "web"
+        ports:
+        - containerPort:  443
+          name:  concourse-web
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: concourse-web-service
+  namespace: ci
+spec:
+  selector:
+    app: concourse-web
+  type: ClusterIP
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+  - name: cws
+    protocol: TCP
+    port: 8443
+    targetPort: 443
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.
+  - name: cwws
+    protocol: TCP
+    port: 2222
+    targetPort: 2222
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.

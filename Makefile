@@ -2,7 +2,7 @@ version=20220810.1
 istio_version=1.14.3
 istio_version_arm=1.14.3
 nginx_ingress_controller_version=1.3.0
-
+concourse_version=7.8.2
 # Archlinux setup
 init_archlinux:
 	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt --needed
@@ -136,3 +136,26 @@ minikube_dashboard:
 	nohup minikube dashboard&
 kiali_dashboard:
 	nohup istioctl dashboard kiali&
+
+# CI
+concourse_init:
+	wget https://github.com/concourse/concourse/releases/download/v$(concourse_version)/concourse-$(concourse_version)-linux-amd64.tgz
+	tar -xzvf concourse-$(concourse_version)-linux-amd64.tgz
+	kubectl apply -f ci/concourse/infra/concourse-namespace.yaml
+concourse_keygen:
+	cd concourse/bin && ./concourse generate-key -t rsa -f ../../ci/concourse/secrets/session_signing_key
+	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/tsa_host_key
+	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/worker_key
+	-kubectl delete secret -n ci session-signing
+	-kubectl delete secret -n ci tsa-host-private
+	-kubectl delete secret -n ci tsa-host-public
+	-kubectl delete secret -n ci worker-private
+	-kubectl delete secret -n ci worker-public
+	kubectl create secret generic session-signing -n ci --from-file=ci/concourse/secrets/session_signing_key
+	kubectl create secret generic tsa-host-private -n ci  --from-file=ci/concourse/secrets/tsa_host_key
+	kubectl create secret generic tsa-host-public -n ci  --from-file=ci/concourse/secrets/tsa_host_key.pub
+	kubectl create secret generic worker-private -n ci  --from-file=ci/concourse/secrets/worker_key
+	kubectl create secret generic worker-public  -n ci  --from-file=ci/concourse/secrets/worker_key.pub
+	rm -f ci/concourse/secrets/*
+concourse_create:
+	cd ci/concourse/infra && kubectl apply -k .
