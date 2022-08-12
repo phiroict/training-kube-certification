@@ -9,7 +9,7 @@ ARG path
 ARG app_name
 
 RUN mkdir /app
-COPY ./$path /app
+COPY $path /app
 RUN tree
 WORKDIR /app/$app_name
 RUN ls -l 
