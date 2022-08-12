@@ -63,7 +63,10 @@ There is a project to set up a complete cluster : `https://github.com/phiroict/t
 
 ### Use minikube. 
 If you are less interested in the inner workings of kubernetes, you can use minikube, a cluster you can run locally on a machine with at least 36 GiB RAM. 
-In the make file there are four ways to create these minikube stacks 
+In the make file there are four ways to create these minikube stacks.
+If you do not that much memory you can change the settings, by for instance using fewer nodes and memory. Note that tools like istio need a lot of resources so if you 
+notice that pods are failing with OOMErrors you need to increase memory per node. It is better to have fewer nodes than memory. 
+On linux, the kvm2 minikube is recommended.  
 
 ```makefile
 ## Minikube start commands with several drivers
@@ -295,4 +298,10 @@ So the context change cannot find the cluster.
 Solved, missed the settings in the set-context should be this
 ```bash
 kubectl config set-context ${TARGET_USER} --cluster=kubernetes --user=${TARGET_USER} --namespace=default
+```
+
+## concourse create pipeline 
+```bash
+cd ci/concourse/pipeline/apps
+cat build-microservice-gateway.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
 ```

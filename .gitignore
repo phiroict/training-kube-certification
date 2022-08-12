@@ -4,3 +4,5 @@ secret*
 istio*
 nohup.out
 *.tgz
+concourse/!/ci/concourse/pipelines
+concourse/!/ci/concourse/infra

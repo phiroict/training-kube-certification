@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: concourse-worker
-  replicas: 5
+  replicas: 2
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -32,20 +32,22 @@ spec:
           privileged: true
         resources:
           requests:
-            cpu: 100m
-            memory: 500Mi
+            cpu: 1000m
+            memory: 4000Mi
           limits:
-            cpu: 100m
-            memory: 500Mi
+            cpu: 1100m
+            memory: 4100Mi
         env:
-        - name: CONCOURSE_WORK_DIR
-          value: /opt/concourse/worker
         - name: CONCOURSE_TSA_HOST
           value: concourse-web-service:2222
         - name: CONCOURSE_TSA_PUBLIC_KEY
           value: "/opt/hostkeypub/tsa_host_key.pub"
         - name: CONCOURSE_TSA_WORKER_PRIVATE_KEY
           value: "/opt/workerkey/worker_key"
+        - name: CONCOURSE_WORK_DIR
+          value: "/worker-state"
+        - name: CONCOURSE_WORKER_WORK_DIR
+          value: "/worker-state"
         ports:
         - containerPort:  2222
           name:  con-worker
@@ -58,6 +60,9 @@ spec:
         - name: workerkeypriv
           mountPath: "/opt/workerkey"
           readOnly: true
+        - name: workdir
+          mountPath: "/worker-state"
+          readOnly: false
 
       volumes:
         - name: localtime
@@ -71,5 +76,8 @@ spec:
           secret:
             secretName: worker-private
             optional: false
+        - name: workdir
+          hostPath:
+            path: /tmp
       restartPolicy: Always
       

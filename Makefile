@@ -141,6 +141,9 @@ concourse_init:
 	tar -xzvf concourse-$(concourse_version)-linux-amd64.tgz
 	kubectl apply -f ci/concourse/infra/concourse-namespace.yaml
 	mkdir -p ci/concourse/secrets
+	sudo cp -p concourse/bin/concourse /usr/bin/concourse
+	cd concourse/fly-assets && tar -xzvf fly-linux-amd64.tgz
+	sudo cp -p concourse/fly-assets/fly /usr/bin/fly
 concourse_keygen:
 	cd concourse/bin && ./concourse generate-key -t rsa -f ../../ci/concourse/secrets/session_signing_key
 	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/tsa_host_key

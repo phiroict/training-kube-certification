@@ -1,0 +1,33 @@
+---
+resources:
+- name: gateway-project
+  type: git
+  source:
+    uri: https://github.com/phiroict/training-kube-certification
+    branch: main
+- name: rust-builder
+  type: registry-image
+  source:
+    repository: rust
+    tag: latest
+
+jobs:
+- name: build-ms-gateway
+  plan:
+  - get: gateway-project
+    trigger: true
+  - get: rust-builder
+    trigger: true
+  - task: run-build
+    image: rust-builder
+    config:
+      inputs:
+      - name: gateway-project
+      outputs:
+      - name: executable
+        path: apps/gateway/target/release/gateway
+      platform: linux
+      run:
+        dir: apps/gateway
+        path: cargo
+        args: ["build", "--release"]
