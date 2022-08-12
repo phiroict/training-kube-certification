@@ -10,7 +10,6 @@ ARG app_name
 
 RUN mkdir /app
 COPY ./$path /app
-RUN tree
 WORKDIR /app/$app_name
 RUN ls -l 
 RUN rustup override set nightly && 	cargo install cargo-release && 	rustup component add clippy && 	rustup component add rustfmt
