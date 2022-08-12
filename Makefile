@@ -96,7 +96,7 @@ minikube_virtualbox:
 	minikube start --driver virtualbox --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
 minikube_kvm2:
-	minikube start --driver kvm2 --nodes 4 --cpus 2 --memory 8000M
+	minikube start --driver kvm2 --nodes 2 --cpus 2 --memory 10000M
 	minikube addons enable ingress
 minikube_delete:
 	minikube delete
