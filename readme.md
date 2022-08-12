@@ -17,7 +17,7 @@
 
 
 # Stack
-- Linux system (this has been developed on a Arch linux machine, should work fine on other distros as well) 
+- A Linux system (this has been developed on an Arch linux machine, should work fine on other distros as well) 
   - MacOS -> This is now the ARM platform so many container images need to be build for this platform, this is out of scope for this training. Good luck.
   - MacOS and Windows use VM when running docker containers so this solution may not work without faffing network settings, again, outside scope and again, Good luck.
   - For archlinux there is an ansible configuration playbook at `infra/ansible/dev-machine/playbook.yaml`, ran from the `make init_ansible` task.
@@ -26,7 +26,7 @@
 - kubernetes cluster 
 - kustomize
 - make (or CMake)
-- istio (It will be overwritten during some of the make tasks, this is just for bootstrapping)
+- istio (It will be overwritten during some make tasks, this is just for bootstrapping)
 - rustup / rustc
 - kvm2 / qemu (There are other virtualisation platforms you can use, check the `Minikube` section of the make file as how to create them - I have been using the kvm2 stack as it is opensource)
 - jmeter
@@ -45,7 +45,7 @@ Flow of the setup is:
 - [other oses] install the stack above
 - Then run the `make provision_minikube` 
 
-## Short cuts 
+## Shortcuts 
 For the examples add: 
 ```text
 alias k=kubectl 
@@ -144,10 +144,10 @@ The tasks defined in there are:
 | bounce_minikube                 | Tear down and completely rebuild the k8s stack.                                                                                                  |
 
 # Design and use
-This is a complete stack development. This chapter will move to some of the design choices.
+This is a complete stack development. This chapter will list some design choices.
 
 ## Main flow
-In the whole stack these are the main components. Some of the details are omitted, we get to them later. 
+In the whole stack these are the main components. Some details are omitted, we get to them later. 
 
 ![Main flow](docs/images/High_level_kubernetes_flow.png)
 
@@ -248,15 +248,15 @@ metadata:
     kubernetes.io/service-account.name: dev-deploy-principal
 type: kubernetes.io/service-account-token  
 ```
-Note that since k8s 1.24 the secret is no longer automatically generated, this is not well documented as of yet, so we generate the secret as is depicted.
+Note that since k8s 1.24 the secret is no longer automatically generated, this is not well documented as yet, so we generate the secret as is depicted.
 
 
 ## Environments 
 
 We use `kustomize` to render the environments for the kubernetes setup. 
-Note that it needs an external app installed, there is a integrated version in kubectl itself, but it is barely maintained. 
+Note that it needs an external app installed, there is an integrated version in kubectl itself, but it is barely maintained. 
 
-The scripts are in the `stack/kustomize` folder and you call them from that folder with:
+The scripts are in the `stack/kustomize` folder, and you call them from that folder with:
 
 [env is one of `{dev,test,uat,prod}`]
 
