@@ -56,7 +56,7 @@ jobs:
         DOCKERFILE: gateway-project/infra/docker/Dockerfile
         CONTEXT: gateway-project/infra
         BUILD_ARG_app_name: gateway
-        BUILD_ARG_path: gateway-project/apps
+        BUILD_ARG_path: apps
   - put: build-container-repo
     params:
       image: image/image.tar
