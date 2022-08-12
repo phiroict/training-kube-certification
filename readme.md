@@ -300,6 +300,12 @@ Solved, missed the settings in the set-context should be this
 kubectl config set-context ${TARGET_USER} --cluster=kubernetes --user=${TARGET_USER} --namespace=default
 ```
 
+## concourse login
+```bash
+fly --target main login --concourse-url http://concourse.info:32080/
+source <(fly completion --shell bash)
+```
+
 ## concourse create pipeline 
 ```bash
 cd ci/concourse/pipeline/apps

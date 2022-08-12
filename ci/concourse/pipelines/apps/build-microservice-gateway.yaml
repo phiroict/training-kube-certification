@@ -25,9 +25,9 @@ jobs:
       - name: gateway-project
       outputs:
       - name: executable
-        path: apps/gateway/target/release/gateway
+        path: gateway-project/apps/gateway/target/release/gateway
       platform: linux
       run:
-        dir: apps/gateway
+        dir: gateway-project/apps/gateway
         path: cargo
         args: ["build", "--release"]
