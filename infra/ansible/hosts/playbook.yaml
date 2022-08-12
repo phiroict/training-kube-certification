@@ -1,0 +1,16 @@
+---
+- name: Update hosts file after minikube creation
+  become: yes
+  hosts: localhost
+  vars:
+    ip_address: 1.1.1.1
+  tasks:
+    - name: Insert IP addresses in the hosts file
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ ip_address }} {{ item }}"
+        regexp: "{{ item }}$"
+        insertbefore: "# END HEADER"
+      loop:
+        - gateway.example.com
+        - concourse.info

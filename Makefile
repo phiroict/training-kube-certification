@@ -101,6 +101,8 @@ minikube_kvm2:
 minikube_delete:
 	minikube delete
 
+minikube_set_hosts:
+	cd infra/ansible/hosts && ansible-playbook -c local --ask-become-pass --extra-vars "ip_address=$(shell minikube ip)" playbook.yaml
 # Service mesh ----------------------------------------------------------------------------------------------------------------------------------------------------------
 istio_init:
 	istioctl install --set profile=demo -y
@@ -159,9 +161,10 @@ concourse_create:
 concourse_delete:
 	cd ci/concourse/infra && kubectl delete -k .
 concourse_all: concourse_init concourse_keygen concourse_create
-
+concourse_web:
+	nohup firefox http://concourse.info:32080 &
 # Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
-provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_all
-provision_mac_arm_kube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_all minikube_set_hosts
+provision_mac_arm_kube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts
 
 bounce_minikube: minikube_delete provision_minikube

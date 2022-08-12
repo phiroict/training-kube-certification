@@ -68,6 +68,9 @@ spec:
 #            secretKeyRef:
 #              name: postgres-secret-config
 #              key: password
+        - name: CONCOURSE_EXTERNAL_URL
+          value: "http://concourse.info:32080"
+
         ports:
         - containerPort:  443
           name:  concourse-web

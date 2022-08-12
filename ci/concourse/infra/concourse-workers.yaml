@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: concourse-worker
-  replicas: 1
+  replicas: 5
   strategy:
     rollingUpdate:
       maxSurge: 25%

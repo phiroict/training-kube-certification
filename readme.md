@@ -86,6 +86,63 @@ were the three I tested it on.
 More info [here](https://minikube.sigs.k8s.io/docs/drivers/)  
 More info about [minikube](https://minikube.sigs.k8s.io/docs/)  
 
+## Makefile 
+
+To document commands and keep them in sync with use we use a Makefile as the main local pipeline and task runner.
+The tasks defined in there are: 
+
+| Make task                       | description                                                                                                                                      |
+|---------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| init_archlinux                  | For a linux machine these are the preamble settings and applications.                                                                            |
+| init_ansible                    | Does the same as the first but now using ansible                                                                                                 |
+| create_user                     | Example of creation of a user with creation of the SSL certs needed --reference only                                                             |
+| create_readonly_role_sa         | Example of creation of a service account -reference only                                                                                         |
+| create_sa_token_dashboard_admin | Example of a token generation for a sa account (kubectl>1.21 no longer does this automatically)                                                  |
+| init_namespaces                 | Creates the namespaces we use, as we add other components on the namespace we do not want to delete / create it with the rest of the infra stack |
+| deploy_dev                      | Deploy the infra & applications on the dev environment, uses kustomize.                                                                          |
+| deploy_test                     | Deploy the infra & applications on the test environment, uses kustomize.                                                                         |
+| deploy_uat                      | Deploy the infra & applications on the uat environment, uses kustomize.                                                                          |
+| deploy_prod                     | Deploy the infra & applications on the prod environment, uses kustomize.                                                                         |
+| undeploy_dev                    | Remove infra for dev (save namespace)                                                                                                            |
+| undeploy_test                   | Remove infra for test (save namespace)                                                                                                           |
+| undeploy_uat                    | Remove infra for uat (save namespace)                                                                                                            |
+| undeploy_prod                   | Remove infra for prod (save namespace)                                                                                                           |
+| app_init                        | Setup rust for nightly build use (Rocket, the service framework needs that)                                                                      |
+| app_build_gateway               | Build the gateway microservice application                                                                                                       |
+| app_build_datasource            | Build the datasource microservice application                                                                                                    |
+| app_build_all                   | Build all the microservices                                                                                                                      |
+| app_run_all                     | Run the microservices locally on the machine.                                                                                                    |
+| app_build_gateway_release       | Build the Rust release version                                                                                                                   |
+| app_build_datasource_release    | Builds the Rust release version                                                                                                                  |
+| app_build_all_release           | Build all release versions                                                                                                                       |
+| app_container_gateway           | Create the docker image for the gateway microservice                                                                                             |
+| app_container_datasource        | Create the docker image for the datasource microservice                                                                                          |
+| app_container_build_all         | Build all containers for the microservices                                                                                                       |
+| docker_compose_run              | Run the images in a docker compose stack locally                                                                                                 |
+| docker_compose_stop             | Stop and delete local docker compose stack                                                                                                       |
+| minikube_podman                 | Create k8s cluster using podman (Does not need a docker engine running, only needs containerd)                                                   |
+| minikube_docker                 | Create k8s cluster using docker (Needs running docker engine)                                                                                    |
+| minikube_virtualbox             | Create k8s cluster on virtualbox. VB needs to be installed, but you would not need containerization on you local machine                         |
+| minikube_kvm2                   | Create k8s cluster on kvm / qemu (recommended way on linux)                                                                                      |
+| minikube_delete                 | Delete and erase minikube from your system                                                                                                       |
+| minikube_set_hosts              | Get the minikube gateway ip address and places it in the /etc/hosts file                                                                         |
+| istio_init                      | Install istio in the cluster using defaults                                                                                                      |
+| istio_init_arm                  | Installs istio on the cluster on the ARM platform (Mac M1/2 platform)                                                                            |
+| istio_inject                    | Injects istio in namespaces                                                                                                                      |
+| istio_extras                    | Installs extra tools for istio, kialis, prometheus, grafana, etc.                                                                                |
+| istio_extras_arm                | Installs extra tools for istio, kialis, prometheus, grafana, etc.                                                                                |
+| minikube_dashboard              | Shows the k8s dashboard                                                                                                                          |
+| kiali_dashboard                 | Sows the kiali dashboard                                                                                                                         |
+| concourse_init                  | Downloads concourse CI on k8s, creates the `ci` namespace                                                                                        |
+| concourse_keygen                | Generate keys for concourse                                                                                                                      |
+| concourse_create                | Creates the stack for concourse, needs init and keygen to have run at least once                                                                 |
+| concourse_delete                | Remove the concourse stack, leaves the `ci` namespace                                                                                            
+| concourse_all                   | Runs complete concourse installation                                                                                                             |
+| concourse_web                   | Opens the concourse web site                                                                                                                     |
+| provision_minikube              | Builds the complete kubernetes stack with apps, services, istio, and concourse                                                                   |
+| provision_mac_arm_kube          | Builds the complete kubernetes stack with apps, services, istio, and concourse  for ARM                                                          |
+| bounce_minikube                 | Tear down and completely rebuild the k8s stack.                                                                                                  |
+
 # Design and use
 This is a complete stack development. This chapter will move to some of the design choices.
 
