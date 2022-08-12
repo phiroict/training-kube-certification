@@ -63,14 +63,15 @@ spec:
         - name: CONCOURSE_POSTGRES_USER
           value: concourse
         - name: CONCOURSE_POSTGRES_PASSWORD
-          value: password
-#          valueFrom:
-#            secretKeyRef:
-#              name: postgres-secret-config
-#              key: password
+#          value: password
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret-config
+              key: password
         - name: CONCOURSE_EXTERNAL_URL
           value: "http://concourse.info:32080"
-
+        - name: CONCOURSE_KUBERNETES_IN_CLUSTER
+          value: "true"
         ports:
         - containerPort:  443
           name:  concourse-web

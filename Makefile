@@ -126,7 +126,8 @@ istio_extras_arm:
 	tar xfv istio-$(istio_version_arm)-osx-arm64.tar.gz
 	kubectl apply -f istio-$(istio_version_arm)/samples/addons/
 	rm -f istio-$(istio_version_arm)-osx-arm64.tar.gz
-
+istio_kiali_dashboard:
+	nohup istioctl dashboard kiali &
 
 # Dashboards
 minikube_dashboard:
@@ -167,7 +168,7 @@ concourse_all: concourse_init concourse_keygen concourse_create
 concourse_web:
 	nohup firefox http://concourse.info:32080 &
 # Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
-provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_all minikube_set_hosts
-provision_mac_arm_kube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_all minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
+provision_mac_arm_minikube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
 
 bounce_minikube: minikube_delete provision_minikube

@@ -10,6 +10,13 @@ resources:
   source:
     repository: rust
     tag: latest
+- name: build-container-repo
+  type: registry-image
+  icon: docker
+  source:
+    repository: phiroict/training_k8s_rust_gateway:20220813
+    username: ((registry-username))
+    password: ((registry-password))
 
 jobs:
 - name: build-ms-gateway
@@ -18,16 +25,38 @@ jobs:
     trigger: true
   - get: rust-builder
     trigger: true
-  - task: run-build
-    image: rust-builder
+#  - task: run-build
+#    image: rust-builder
+#    config:
+#      inputs:
+#      - name: gateway-project
+#      outputs:
+#      - name: executable
+#        path: gateway-project/apps/gateway/target/release/gateway
+#      platform: linux
+#      run:
+#        dir: gateway-project/apps/gateway
+#        path: cargo
+#        args: ["build", "--release"]
+  - task: build-task-image
+    privileged: true
     config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: vito/oci-build-task
       inputs:
       - name: gateway-project
       outputs:
-      - name: executable
-        path: gateway-project/apps/gateway/target/release/gateway
-      platform: linux
+      - name: image
       run:
-        dir: gateway-project/apps/gateway
-        path: cargo
-        args: ["build", "--release"]
+        path: build
+      params:
+        DOCKERFILE: gateway-project/infra/docker/Dockerfile
+        CONTEXT: gateway-project/infra
+        BUILD_ARG_app_name: gateway
+        BUILD_ARG_path: gateway-project/apps
+  - put: build-container-repo
+    params:
+      image: image/image.tar
