@@ -134,6 +134,11 @@ minikube_dashboard:
 	nohup minikube dashboard&
 kiali_dashboard:
 	nohup istioctl dashboard kiali&
+argocd_dashboard:
+	-nohup kubectl port-forward svc/argocd-server -n argocd 8082:443&
+	nohup firefox http://localhost:8082&
+concourse_web:
+	nohup firefox http://concourse.info:32080 &
 
 # CI
 concourse_init:
@@ -165,13 +170,16 @@ concourse_create:
 concourse_delete:
 	cd ci/concourse/infra && kubectl delete -k .
 concourse_all: concourse_init concourse_keygen concourse_create
-concourse_web:
-	nohup firefox http://concourse.info:32080 &
 concourse_secrets:
 	source ci/concourse/secrets/git.creds && kubectl create secret generic registry-username -n concourse-main --from-literal=registry-username=$(USERNAME) && kubectl create secret generic registry-password -n concourse-main --from-literal=registry-password=$(PASSWORD)
 
+# CD
+argocd_install:
+	kubectl create ns argocd
+	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
 # Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
-provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_all minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_all minikube_set_hosts argocd_install minikube_dashboard concourse_web istio_kiali_dashboard argocd_dashboard
 provision_mac_arm_minikube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
 
 bounce_minikube: minikube_delete provision_minikube
