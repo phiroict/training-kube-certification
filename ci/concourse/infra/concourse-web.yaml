@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  concourse-web
-  namespace: ci
+  namespace: concourse-main
   labels:
     app:  concourse-web
 spec:
@@ -20,6 +20,7 @@ spec:
       labels:
         app:  concourse-web
     spec:
+      serviceAccountName: web
       # initContainers:
         # Init containers are exactly like regular containers, except:
           # - Init containers always run to completion.
@@ -110,7 +111,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: concourse-web-service
-  namespace: ci
+  namespace: concourse-main
 spec:
   selector:
     app: concourse-web

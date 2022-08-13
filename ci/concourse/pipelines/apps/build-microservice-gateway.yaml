@@ -14,9 +14,10 @@ resources:
   type: registry-image
   icon: docker
   source:
-    repository: phiroict/training_k8s_rust_gateway:20220813
-    username: ((registry-username))
-    password: ((registry-password))
+    repository: phiroict/training_k8s_rust_gateway
+    tag: 20220813
+    username: ((registry-username.registry-username))
+    password: ((registry-password.registry-password))
 
 jobs:
 - name: build-ms-gateway
@@ -54,7 +55,7 @@ jobs:
         path: build
       params:
         DOCKERFILE: gateway-project/infra/docker/Dockerfile
-        CONTEXT: gateway-project/infra
+        CONTEXT: gateway-project
         BUILD_ARG_app_name: gateway
         BUILD_ARG_path: apps
   - put: build-container-repo

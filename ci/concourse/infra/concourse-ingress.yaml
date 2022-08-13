@@ -3,7 +3,7 @@
   kind: Ingress
   metadata:
     name: concource-ingress
-    namespace: ci
+    namespace: concourse-main
   spec:
     ingressClassName: nginx-default
     rules:

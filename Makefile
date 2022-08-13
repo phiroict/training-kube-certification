@@ -149,16 +149,16 @@ concourse_keygen:
 	cd concourse/bin && ./concourse generate-key -t rsa -f ../../ci/concourse/secrets/session_signing_key
 	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/tsa_host_key
 	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/worker_key
-	-kubectl delete secret -n ci session-signing
-	-kubectl delete secret -n ci tsa-host-private
-	-kubectl delete secret -n ci tsa-host-public
-	-kubectl delete secret -n ci worker-private
-	-kubectl delete secret -n ci worker-public
-	kubectl create secret generic session-signing -n ci --from-file=ci/concourse/secrets/session_signing_key
-	kubectl create secret generic tsa-host-private -n ci  --from-file=ci/concourse/secrets/tsa_host_key
-	kubectl create secret generic tsa-host-public -n ci  --from-file=ci/concourse/secrets/tsa_host_key.pub
-	kubectl create secret generic worker-private -n ci  --from-file=ci/concourse/secrets/worker_key
-	kubectl create secret generic worker-public  -n ci  --from-file=ci/concourse/secrets/worker_key.pub
+	-kubectl delete secret -n concourse-main session-signing
+	-kubectl delete secret -n concourse-main tsa-host-private
+	-kubectl delete secret -n concourse-main tsa-host-public
+	-kubectl delete secret -n concourse-main worker-private
+	-kubectl delete secret -n concourse-main worker-public
+	kubectl create secret generic session-signing -n concourse-main --from-file=ci/concourse/secrets/session_signing_key
+	kubectl create secret generic tsa-host-private -n concourse-main  --from-file=ci/concourse/secrets/tsa_host_key
+	kubectl create secret generic tsa-host-public -n concourse-main  --from-file=ci/concourse/secrets/tsa_host_key.pub
+	kubectl create secret generic worker-private -n concourse-main  --from-file=ci/concourse/secrets/worker_key
+	kubectl create secret generic worker-public  -n concourse-main  --from-file=ci/concourse/secrets/worker_key.pub
 	rm -f ci/concourse/secrets/*
 concourse_create:
 	cd ci/concourse/infra && kubectl apply -k .

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  concourse-worker
-  namespace: ci
+  namespace: concourse-main
   labels:
     app:  concourse-worker
 spec:

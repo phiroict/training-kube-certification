@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: postgres-secret-config
-  namespace: ci
+  namespace: concourse-main
 type: Opaque
 data:
  password: cGFzc3dvcmQ=
@@ -12,7 +12,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: postgres-pv-volume
-  namespace: ci
+  namespace: concourse-main
   labels:
     type: local
 spec:
@@ -28,7 +28,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pv-claim
-  namespace: ci
+  namespace: concourse-main
 spec:
   storageClassName: manual
   accessModes:
@@ -41,7 +41,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
-  namespace: ci
+  namespace: concourse-main
 spec:
   replicas: 1
   selector:
@@ -85,7 +85,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres
-  namespace: ci
+  namespace: concourse-main
   labels:
     app: postgres
 spec:

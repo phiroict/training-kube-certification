@@ -311,3 +311,11 @@ source <(fly completion --shell bash)
 cd ci/concourse/pipeline/apps
 cat build-microservice-gateway.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
 ```
+
+### Set passwords. 
+
+```bash
+k create ns concourse-main
+k create secret generic registry-username -n concourse-main --from-literal=registry-username=$USERNAME
+k create secret generic registry-password -n concourse-main --from-literal=registry-password=$PASSWORD
+```
