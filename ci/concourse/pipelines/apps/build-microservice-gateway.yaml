@@ -15,30 +15,38 @@ resources:
   icon: docker
   source:
     repository: phiroict/training_k8s_rust_gateway
-    tag: 20220813
+    tag: 20220813.1
     username: ((registry-username.registry-username))
     password: ((registry-password.registry-password))
+- name: build-container-ds-repo
+  type: registry-image
+  icon: docker
+  source:
+    repository: phiroict/training_k8s_rust_datasource
+    tag: 20220813.1
+    username: ((registry-username.registry-username))
+    password: ((registry-password.registry-password))
+
+- name: version
+  type: semver
+  source:
+    driver: git
+    uri: https://github.com/phiroict/training-kube-certification
+    branch: main
+    file: version
+    username: ((git-username.git-username))
+    password: ((git-password.git-password))
+    initial_version: 20220813.1.0
 
 jobs:
 - name: build-ms-gateway
   plan:
+  - get: version
+    params: {bump: minor}
   - get: gateway-project
-    trigger: true
+    trigger: false
   - get: rust-builder
-    trigger: true
-#  - task: run-build
-#    image: rust-builder
-#    config:
-#      inputs:
-#      - name: gateway-project
-#      outputs:
-#      - name: executable
-#        path: gateway-project/apps/gateway/target/release/gateway
-#      platform: linux
-#      run:
-#        dir: gateway-project/apps/gateway
-#        path: cargo
-#        args: ["build", "--release"]
+    trigger: false
   - task: build-task-image
     privileged: true
     config:
@@ -61,3 +69,36 @@ jobs:
   - put: build-container-repo
     params:
       image: image/image.tar
+      additional_tags: version/version
+- name: build-ms-datasource
+  plan:
+  - get: version
+  - get: gateway-project
+    trigger: false
+  - get: rust-builder
+    trigger: false
+  - task: build-task-image
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: vito/oci-build-task
+      inputs:
+      - name: gateway-project
+      outputs:
+      - name: image
+      run:
+        path: build
+      params:
+        DOCKERFILE: gateway-project/infra/docker/Dockerfile
+        CONTEXT: gateway-project
+        BUILD_ARG_app_name: datasource
+        BUILD_ARG_path: apps
+  - put: build-container-ds-repo
+    params:
+      image: image/image.tar
+      additional_tags: version/version
+  - put: version
+    params: {file: version/version , bump: minor}

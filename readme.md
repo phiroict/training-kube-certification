@@ -39,6 +39,9 @@ Optional:
 
 # Implementation setup
 
+## Setup password files 
+See concourse [passwords](###Set_passwords)
+
 ## Setup 
 Flow of the setup is: 
 - [if using archlinux] run `make init_archlinux` [install make first or run the commandline from the makefile directly]
@@ -312,10 +315,33 @@ cd ci/concourse/pipeline/apps
 cat build-microservice-gateway.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
 ```
 
-### Set passwords. 
+### Set_passwords 
+Create a docker.creds file in the `ci/concourse/secrets` folder (It will not be stored in git) in format
+```bash
+USERNAME=<youdockerusername>
+PASSWORD=<yourdockerpassword>
+```
+
+Then 
 
 ```bash
 k create ns concourse-main
+source ci/concourse/secrets/docker.creds
 k create secret generic registry-username -n concourse-main --from-literal=registry-username=$USERNAME
 k create secret generic registry-password -n concourse-main --from-literal=registry-password=$PASSWORD
+```
+
+Create a git.creds file in the `ci/concourse/secrets` folder (It will not be stored in git) in format
+```bash
+GUSERNAME=<youdockerusername>
+GPASSWORD=<yourdockerpassword>
+```
+
+Then
+
+```bash
+k create ns concourse-main
+source ci/concourse/secrets/git.creds
+k create secret generic git-username -n concourse-main --from-literal=git-username=$GUSERNAME
+k create secret generic git-password -n concourse-main --from-literal=git-password=$GPASSWORD
 ```
