@@ -5,3 +5,15 @@ bases:
 namespace: prod-applications
 patchesStrategicMerge:
 - 01-deployment.yaml
+- 02-service.yaml
+- 03-ingress.yaml
+patchesJSON6902:
+- patch: |-
+   - op: replace
+     path: /metadata/name
+     value: prod-ingress-gateway
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: dev-ingress-gateway
