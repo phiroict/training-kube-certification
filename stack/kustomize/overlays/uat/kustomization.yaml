@@ -2,15 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 bases:
 - ../../base
-patches:
-- patch: |-
-    - op: replace 
-      path: "/metadata/name"
-      value: "uat-applications"
-    - op: replace 
-      path: "/metadata/labels/kubernetes.io~1metadata.name"
-      value: "uat-applications"
-
-  target:
-    kind: Namespace 
-    name: "dev-applications"
+namespace: uat-applications
+patchesStrategicMerge:
+- 01-deployment.yaml

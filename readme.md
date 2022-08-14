@@ -148,6 +148,10 @@ The tasks defined in there are:
 | provision_minikube              | Builds the complete kubernetes stack with apps, services, istio, and concourse                                                                   |
 | provision_mac_arm_kube          | Builds the complete kubernetes stack with apps, services, istio, and concourse  for ARM                                                          |
 | bounce_minikube                 | Tear down and completely rebuild the k8s stack.                                                                                                  |
+| argocd_install                  | Install the argcd component in its separate namespace                                                                                            |
+| argocd_dashboard                | open the argocd dashboard, note that you need to get the secret as password from k8s see `### Get the password for argocd`                                                        |
+
+
 
 # Design and use
 This is a complete stack development. This chapter will list some design choices.
@@ -178,6 +182,12 @@ It is created separately by the following make tasks
 | concourse_create | Create the stack, assumes `concource_init` and `concourse_keygen` have run                                                                                                       |
 | concourse_delete | Clean up the stack except the `ci` namespace                                                                                                                                     |
 | concourse_all | Runs concourse_init, keygen and create in one go for convenience |
+
+## CD 
+
+For Continues deployment we use argocd that is installed in its own namespace. It will make sure the infrastructure is running 
+and the applications are in a specific state. Note that it will use kustomize to generate the resources and as such has 
+no knowledge of the infra and application layout. 
 
 # Appendixes 
 ## Convenient commands 
@@ -345,3 +355,13 @@ source ci/concourse/secrets/git.creds
 k create secret generic git-username -n concourse-main --from-literal=git-username=$GUSERNAME
 k create secret generic git-password -n concourse-main --from-literal=git-password=$GPASSWORD
 ```
+
+## ArgoCD 
+### Get the password for argocd
+
+Now get the secret for login
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+

@@ -26,6 +26,7 @@
         - kustomize
         - rustup
         - wireshark-qt
+        - argocd
     - name: Install rust
       shell: rustup install stable
       become_user: phiro

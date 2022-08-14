@@ -2,28 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 bases:
 - ../../base
-patches:
-- patch: |-
-    - op: replace 
-      path: "/metadata/name"
-      value: "test-applications"
-    - op: replace 
-      path: "/metadata/labels/kubernetes.io~1metadata.name"
-      value: "test-applications"
-    - op: replace 
-      path: "/metadata/namespace"
-      value: "test-applications"
-
-  target:
-    kind: Namespace 
-    name: "dev-applications"
-- patch: |-
-    - op: replace
-      path: "/metadata/namespace"
-      value: "test-applications"
-    - op: |-
-      path: "/spec/replicas"
-      value: "2"
-  target:
-    kind: Deployment
-    name: "dev-applications"
+namespace: test-applications
+patchesStrategicMerge:
+- 01-deployment.yaml
