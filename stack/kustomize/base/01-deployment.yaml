@@ -1,18 +1,15 @@
-# ## Gateway
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  app-gateway
-  namespace: dev-applications
   labels:
-    app:  app-gateway
-
+    app: app-gateway
+  name: app-gateway
+  namespace: dev-applications
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: app-gateway
-  replicas: 1
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -21,71 +18,62 @@ spec:
   template:
     metadata:
       labels:
-        app:  app-gateway
-    
+        app: app-gateway
     spec:
-      # initContainers:
-        # Init containers are exactly like regular containers, except:
-          # - Init containers always run to completion.
-          # - Each init container must complete successfully before the next one starts.
       containers:
-      - name:  app-gateway
-  
+      - env:
+        - name: DATASOURCE_URL
+          value: datasource:8010/data
         image: phiroict/training_k8s_rust_gateway:20220813.10.0
-        resources:
-          requests:
-            cpu: 500m
-            memory: 500Mi
-          limits:
-            cpu: 500m
-            memory: 500Mi
         livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
           tcpSocket:
             port: 8000
-          initialDelaySeconds: 5
           timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
+        name: app-gateway
+        ports:
+        - containerPort: 8000
+          name: app-gateway
         readinessProbe:
+          failureThreshold: 3
           httpGet:
             path: /_status/healthz
             port: 8000
           initialDelaySeconds: 5
-          timeoutSeconds: 2
-          successThreshold: 1
-          failureThreshold: 3
           periodSeconds: 10
-        env:
-        - name: DATASOURCE_URL
-          value: datasource:8010/data
-        ports:
-        - containerPort:  8000
-          name:  app-gateway
-      
+          successThreshold: 1
+          timeoutSeconds: 2
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 500m
+            memory: 500Mi
         volumeMounts:
-        - name: localtime
-          mountPath: /etc/localtime
-      volumes:
-        - name: localtime
-          hostPath:
-            path: /usr/share/zoneinfo/Pacific/Auckland
+        - mountPath: /etc/localtime
+          name: localtime
       restartPolicy: Always
-# ## Datasource deployment
+      volumes:
+      - hostPath:
+          path: /usr/share/zoneinfo/Pacific/Auckland
+        name: localtime
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  app-datasource
-  namespace: dev-applications
   labels:
-    app:  app-datasource
-
+    app: app-datasource
+  name: app-datasource
+  namespace: dev-applications
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: app-datasource
-  replicas: 1
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -94,50 +82,43 @@ spec:
   template:
     metadata:
       labels:
-        app:  app-datasource
-    
+        app: app-datasource
     spec:
-      # initContainers:
-        # Init containers are exactly like regular containers, except:
-          # - Init containers always run to completion.
-          # - Each init container must complete successfully before the next one starts.
       containers:
-      - name:  app-datasource
-  
-        image: phiroict/training_k8s_rust_datasource:20220813.10.0
-        resources:
-          requests:
-            cpu: 500m
-            memory: 500Mi
-          limits:
-            cpu: 500m
-            memory: 500Mi
+      - image: phiroict/training_k8s_rust_datasource:20220813.10.0
         livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
           tcpSocket:
             port: 8010
-          initialDelaySeconds: 5
           timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
+        name: app-datasource
+        ports:
+        - containerPort: 8010
+          name: app-datasource
         readinessProbe:
+          failureThreshold: 3
           httpGet:
             path: /_status/healthz
             port: 8010
           initialDelaySeconds: 5
-          timeoutSeconds: 2
-          successThreshold: 1
-          failureThreshold: 3
           periodSeconds: 10
-        ports:
-        - containerPort:  8010
-          name:  app-datasource
-      
+          successThreshold: 1
+          timeoutSeconds: 2
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 500m
+            memory: 500Mi
         volumeMounts:
-        - name: localtime
-          mountPath: /etc/localtime
-      volumes:
-        - name: localtime
-          hostPath:
-            path: /usr/share/zoneinfo/Pacific/Auckland
+        - mountPath: /etc/localtime
+          name: localtime
       restartPolicy: Always
+      volumes:
+      - hostPath:
+          path: /usr/share/zoneinfo/Pacific/Auckland
+        name: localtime
