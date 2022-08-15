@@ -94,9 +94,14 @@ jobs:
           - "app-gateway"
           - "phiroict/training_k8s_rust_gateway:gateway-project/version"
           - "gateway-project"
+  - put: version
+    params: {file: version/version , bump: minor}
+
   - put: gateway-project
     params:
       repository: gateway-project
+      merge: true
+      force: true
 # Job : Build datasource
 - name: build-ms-datasource
   plan:
@@ -154,3 +159,5 @@ jobs:
   - put: gateway-project
     params:
       repository: gateway-project
+      force: true
+      merge: true
