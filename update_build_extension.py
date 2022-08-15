@@ -9,7 +9,7 @@ if len(sys.argv) > 3:
     path = sys.argv[1]
     name = sys.argv[2]
     image = sys.argv[3]
-
+print("Start to inject the build number into the stack path: {}, name: {}, image: {}".format(path,name,image))
 configuration = None
 with open(path, 'r') as reader:
     out = []
@@ -23,4 +23,4 @@ with open(path, 'r') as reader:
     with open(path, "w") as writer:
         yaml.dump_all(out, writer, Dumper=yaml.Dumper)
         writer.close()
-
+print("Image injection complete.")

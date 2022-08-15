@@ -102,6 +102,7 @@ jobs:
   plan:
   - get: version
     passed: [build-ms-gateway]
+    trigger: true
   - get: gateway-project
     trigger: false
   - get: rust-builder
