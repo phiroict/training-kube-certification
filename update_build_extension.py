@@ -15,6 +15,7 @@ with open(path, 'r') as reader:
     out = []
     configuration = yaml.load_all(reader, yaml.Loader)
     for doc in configuration:
+        print("Scanning doc type: {}".format(doc['kind']))
         if doc['kind'] == 'Deployment':
             current_name = doc["spec"]["template"]["spec"]["containers"][0]["name"]
             if current_name == name:
