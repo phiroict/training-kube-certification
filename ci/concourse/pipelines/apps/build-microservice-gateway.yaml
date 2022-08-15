@@ -104,6 +104,8 @@ jobs:
   - put: version
     params: {file: version/version , bump: minor}
   - put: gateway-project
+    params:
+      repository: gateway-project
 - name: build-ms-datasource
   plan:
   - get: version
