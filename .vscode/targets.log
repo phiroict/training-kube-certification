@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Aug 10 08:16:01 2022
+# Make data base, printed on Tue Aug 16 08:32:28 2022
 
 # Variables
 
@@ -34,6 +34,8 @@ MAKE_COMMAND := make
 GTK3_MODULES = xapp-gtk3-module
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
+# makefile (from 'Makefile', line 5)
+concourse_version = 7.8.2
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -46,8 +48,6 @@ PWD = /home/phiro/IdeaProjects/training-kube-certification
 MAIL = /var/spool/mail/phiro
 # environment
 XDG_DATA_DIRS = /home/phiro/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
-# environment
-OLDPWD = /home/phiro/IdeaProjects
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # automatic
@@ -63,15 +63,19 @@ XAUTHORITY = /run/user/1000/gdm/Xauthority
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
-GNOME_TERMINAL_SERVICE = :1.92
+GNOME_TERMINAL_SERVICE = :1.171
 # makefile
 MAKEFLAGS = pqrR
+# makefile (from 'Makefile', line 4)
+nginx_ingress_controller_version = 1.3.0
 # makefile
 CURDIR := /home/phiro/IdeaProjects/training-kube-certification
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
+# makefile (from 'Makefile', line 3)
+istio_version_arm = 1.14.3
 # environment
 MFLAGS = -pqrR
 # environment
@@ -87,13 +91,13 @@ MAKEFILE_LIST := Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 28219
+VSCODE_PID = 15056
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/philip-precision7740:@/tmp/.ICE-unix/3901,unix/philip-precision7740:/tmp/.ICE-unix/3901
+SESSION_MANAGER = local/philip-precision7740:@/tmp/.ICE-unix/4056,unix/philip-precision7740:/tmp/.ICE-unix/4056
 # automatic
 *F = $(notdir $*)
 # environment
@@ -111,7 +115,7 @@ MAKE_HOST := x86_64-pc-linux-gnu
 # makefile
 SHELL = /bin/sh
 # makefile (from 'Makefile', line 1)
-version = "20220809.2"
+version = 20220810.1
 # default
 MAKECMDGOALS := all
 # environment
@@ -119,7 +123,7 @@ XMODIFIERS = @im=ibus
 # environment
 SHLVL = 2
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/12cbde22_1746_4fca_b2ec_86cef57243c7
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/a299fe85_6200_4e3a_bc6c_f31da552f5a5
 # environment
 MAKELEVEL := 0
 # default
@@ -137,7 +141,7 @@ MOTD_SHOWN = pam
 # environment
 LC_TIME = en_NZ.UTF-8
 # makefile (from 'Makefile', line 2)
-istio_version = "1.13.7"
+istio_version = 1.14.3
 # environment
 USERNAME = phiro
 # environment
@@ -161,7 +165,7 @@ LOGNAME = phiro
 # makefile
 .DEFAULT_GOAL := init_archlinux
 # environment
-SYSTEMD_EXEC_PID = 3917
+SYSTEMD_EXEC_PID = 4072
 # environment
 HISTCONTROL = ignoreboth:erasedups
 # environment
@@ -221,7 +225,7 @@ GDMSESSION = gnome
 # environment
 LC_IDENTIFICATION = en_NZ.UTF-8
 # variable set hash-table stats:
-# Load=105/1024=10%, Rehash=0, Collisions=11/135=8%
+# Load=107/1024=10%, Rehash=0, Collisions=12/137=9%
 
 # Pattern-specific Variable Values
 
@@ -229,15 +233,35 @@ LC_IDENTIFICATION = en_NZ.UTF-8
 
 # Directories
 
-# . (device 65024, inode 55184372): 24 files, no impossibilities.
+# . (device 65024, inode 55184372): 29 files, no impossibilities.
 
-# 24 files, no impossibilities in 1 directories.
+# 29 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
+
+concourse_keygen:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 154):
+	cd concourse/bin && ./concourse generate-key -t rsa -f ../../ci/concourse/secrets/session_signing_key
+	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/tsa_host_key
+	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/worker_key
+	-kubectl delete secret -n concourse-main session-signing
+	-kubectl delete secret -n concourse-main tsa-host-private
+	-kubectl delete secret -n concourse-main tsa-host-public
+	-kubectl delete secret -n concourse-main worker-private
+	-kubectl delete secret -n concourse-main worker-public
+	kubectl create secret generic session-signing -n concourse-main --from-file=ci/concourse/secrets/session_signing_key
+	kubectl create secret generic tsa-host-private -n concourse-main  --from-file=ci/concourse/secrets/tsa_host_key
+	kubectl create secret generic tsa-host-public -n concourse-main  --from-file=ci/concourse/secrets/tsa_host_key.pub
+	kubectl create secret generic worker-private -n concourse-main  --from-file=ci/concourse/secrets/worker_key
+	kubectl create secret generic worker-public  -n concourse-main  --from-file=ci/concourse/secrets/worker_key.pub
+	rm -f ci/concourse/secrets/session_signing_key ci/concourse/secrets/tsa_host_key ci/concourse/secrets/worker_key
 
 app_container_build_all: app_container_gateway app_container_datasource
 #  Implicit rule search has not been done.
@@ -248,19 +272,31 @@ deploy_test:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 27):
+#  recipe to execute (from 'Makefile', line 33):
 	cd stack/kustomize && kubectl apply -k overlays/test
 
 app_build_all_release: app_build_gateway_release app_build_datasource_release
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 #  File has not been updated.
+
+argocd_install:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 184):
+	kubectl create ns argocd
+	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+	nohup kubectl port-forward svc/argocd-server -n argocd 8082:443 &
 
 app_container_gateway:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 69):
+#  recipe to execute (from 'Makefile', line 75):
 	docker build --build-arg path=apps --build-arg app_name=gateway -t phiroict/training_k8s_rust_gateway:$(version) -f infra/docker/Dockerfile  .
 	docker push phiroict/training_k8s_rust_gateway:$(version)
 
@@ -268,37 +304,73 @@ deploy_uat:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 29):
+#  recipe to execute (from 'Makefile', line 35):
 	cd stack/kustomize && kubectl apply -k overlays/uat
+
+concourse_init:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 145):
+	rm -f concourse-*-linux-amd64.tgz*
+	wget https://github.com/concourse/concourse/releases/download/v$(concourse_version)/concourse-$(concourse_version)-linux-amd64.tgz
+	tar -xzvf concourse-$(concourse_version)-linux-amd64.tgz
+	kubectl apply -f ci/concourse/infra/concourse-namespace.yaml
+	mkdir -p ci/concourse/secrets
+	sudo cp -p concourse/bin/concourse /usr/bin/concourse
+	cd concourse/fly-assets && tar -xzvf fly-linux-amd64.tgz
+	sudo cp -p concourse/fly-assets/fly /usr/bin/fly
 
 create_user:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 13):
+#  recipe to execute (from 'Makefile', line 19):
 	bash ./create_certificate.sh "phiroict"
 
- 
-make: *** No rule to make target 'all'.  Stop.
+istio_extras_arm:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 125):
+	wget https://github.com/istio/istio/releases/download/$(istio_version_arm)/istio-$(istio_version_arm)-osx-arm64.tar.gz
+	tar xfv istio-$(istio_version_arm)-osx-arm64.tar.gz
+	kubectl apply -f istio-$(istio_version_arm)/samples/addons/
+	rm -f istio-$(istio_version_arm)-osx-arm64.tar.gz
 
 undeploy_dev:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 34):
+#  recipe to execute (from 'Makefile', line 40):
 	cd stack/kustomize && kubectl delete -k overlays/dev
 
 deploy_dev:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 25):
+#  recipe to execute (from 'Makefile', line 31):
 	cd stack/kustomize && kubectl apply -k overlays/dev
+
+minikube_set_hosts:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 105):
+	cd infra/ansible/hosts && ansible-playbook -c local --ask-become-pass --extra-vars "ip_address=$(shell minikube ip)" playbook.yaml
+
+argocd_dashboard:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 138):
+	-nohup kubectl port-forward svc/argocd-server -n argocd 8082:443&
+	nohup firefox http://localhost:8082&
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-09 15:33:33.338250057
+#  Last modified 2022-08-15 13:19:37.036329139
 #  File has been updated.
 #  Successfully updated.
 
@@ -306,16 +378,25 @@ istio_extras:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 107):
-	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz 
+#  recipe to execute (from 'Makefile', line 117):
+	rm -rf istio-$(istio_version)
+	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz
 	tar xfv istio-$(istio_version)-linux-amd64.tar.gz
 	kubectl apply -f istio-$(istio_version)/samples/addons/
+	rm -f istio-$(istio_version)-linux-amd64.tar.gz
+	sudo cp -pf istio-$(istio_version)/bin/istioctl  /usr/bin/istioctl
+	# kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v$(nginx_ingress_controller_version)/deploy/static/provider/cloud/deploy.yaml
+
+provision_mac_arm_minikube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 minikube_podman:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 83):
+#  recipe to execute (from 'Makefile', line 89):
 	minikube config set rootless true
 	minikube start --driver podman --container-runtime containerd  --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
@@ -324,17 +405,31 @@ istio_inject:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 102):
+#  recipe to execute (from 'Makefile', line 112):
 	kubectl label namespace dev-applications istio-injection=enabled --overwrite
 	kubectl label namespace test-applications istio-injection=enabled --overwrite
 	kubectl label namespace uat-applications istio-injection=enabled --overwrite
 	kubectl label namespace prod-applications istio-injection=enabled --overwrite
 
+concourse_secrets:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 175):
+	source ci/concourse/secrets/git.creds && kubectl create secret generic registry-username -n concourse-main --from-literal=registry-username=$(USERNAME) && kubectl create secret generic registry-password -n concourse-main --from-literal=registry-password=$(PASSWORD)
+
+concourse_web:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 141):
+	nohup firefox http://concourse.info:32080 &
+
 app_run_all:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 57):
+#  recipe to execute (from 'Makefile', line 63):
 	cd apps/gateway && nohup cargo run&
 	cd apps/datasource && nohup cargo run&
 
@@ -342,32 +437,39 @@ app_build_gateway_release:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 62):
+#  recipe to execute (from 'Makefile', line 68):
 	cd apps/gateway && cargo build --release
+
+concourse_pipeline_deploy:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 180):
+	cd ci/concourse/pipelines/apps && cat build-microservice-gateway.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
 
 minikube_delete:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 96):
+#  recipe to execute (from 'Makefile', line 102):
 	minikube delete
 
 kiali_dashboard:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 120):
+#  recipe to execute (from 'Makefile', line 136):
 	nohup istioctl dashboard kiali&
 
 minikube_kvm2:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 93):
-	minikube start --driver kvm2 --nodes 4 --cpus 2 --memory 8000M
+#  recipe to execute (from 'Makefile', line 99):
+	minikube start --driver kvm2 --nodes 1 --cpus 12 --memory 20000M --disk-size 50gb
 	minikube addons enable ingress
 
-provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_all minikube_set_hosts argocd_install minikube_dashboard concourse_web istio_kiali_dashboard argocd_dashboard
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -376,10 +478,23 @@ docker_compose_run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 76):
+#  recipe to execute (from 'Makefile', line 82):
 	cd infra/docker && docker-compose up -d
 
 bounce_minikube: minikube_delete provision_minikube
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+concourse_create:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 169):
+	cd ci/concourse/infra && kubectl apply -k .
+	bash ./read_secrets_into_k8s_cluster.sh
+
+concourse_all: concourse_init concourse_keygen concourse_create
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -388,21 +503,21 @@ istio_init:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 100):
+#  recipe to execute (from 'Makefile', line 108):
 	istioctl install --set profile=demo -y
 
 deploy_prod:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 31):
+#  recipe to execute (from 'Makefile', line 37):
 	cd stack/kustomize && kubectl apply -k overlays/prod
 
 minikube_virtualbox:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 90):
+#  recipe to execute (from 'Makefile', line 96):
 	minikube start --driver virtualbox --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
 
@@ -423,14 +538,14 @@ docker_compose_stop:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 78):
+#  recipe to execute (from 'Makefile', line 84):
 	cd infra/docker && docker-compose down
 
 app_init:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 46):
+#  recipe to execute (from 'Makefile', line 52):
 	rustup override set nightly
 	cargo install cargo-release
 	rustup component add clippy
@@ -440,73 +555,120 @@ minikube_dashboard:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 118):
+#  recipe to execute (from 'Makefile', line 134):
 	nohup minikube dashboard&
+
+concourse_login:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 178):
+	fly --target main login --concourse-url http://concourse.info:32080/
 
 app_build_datasource:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 54):
+#  recipe to execute (from 'Makefile', line 60):
 	cd apps/datasource && cargo build 
+
+init_ansible:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 15):
+	sudo pacman -S ansible --needed
+	ansible-playbook --ask-become-pass -c local infra/ansible/dev-machine/playbook.yaml
+
+istio_init_arm:
+#  Implicit rule search has not been done.
+ 
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 110):
+	istioctl install --set profile=demo -y --set components.cni.enabled=true
 
 minikube_docker:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 87):
+#  recipe to execute (from 'Makefile', line 93):
 	minikube start --driver docker  --nodes 4 --cpus 2 --memory 8000M
 	minikube addons enable ingress
+
+istio_kiali_dashboard:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 130):
+	nohup istioctl dashboard kiali &
 
 create_sa_token_dashboard_admin:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 17):
-	k apply -f sa_token_generation.yaml
+#  recipe to execute (from 'Makefile', line 23):
+	kubectl apply -f sa_token_generation.yaml
 
 undeploy_test:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 36):
+#  recipe to execute (from 'Makefile', line 42):
 	cd stack/kustomize && kubectl delete -k overlays/dev
 
 app_build_datasource_release:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 64):
+#  recipe to execute (from 'Makefile', line 70):
 	cd apps/datasource && cargo build --release
 
 app_build_gateway:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 52):
+#  recipe to execute (from 'Makefile', line 58):
 	cd apps/gateway && cargo build 
+
+argocd_provision:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 191):
+	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
+	kubectl config get-contexts -o name
+	argocd cluster add --insecure minikube
+	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace dev-applications
 
 app_container_datasource:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 72):
+#  recipe to execute (from 'Makefile', line 78):
 	docker build --build-arg path=apps --build-arg app_name=datasource -t phiroict/training_k8s_rust_datasource:$(version) -f infra/docker/Dockerfile  .
 	docker push phiroict/training_k8s_rust_datasource:$(version)
+
+concourse_delete:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 172):
+	cd ci/concourse/infra && kubectl delete -k .
 
 undeploy_uat:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 38):
+#  recipe to execute (from 'Makefile', line 44):
 	cd stack/kustomize && kubectl delete -k overlays/dev
 
 init_archlinux:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 5):
-	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt --needed
+#  recipe to execute (from 'Makefile', line 8):
+	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt argocd --needed
 	yay -S docker-machine-driver-kvm2 libvirt qemu-headless ebtables --needed
 	sudo systemctl enable libvirtd.service
 	sudo systemctl start libvirtd.service
@@ -517,8 +679,16 @@ undeploy_prod:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 40):
+#  recipe to execute (from 'Makefile', line 46):
 	cd stack/kustomize && kubectl delete -k overlays/dev
+
+argocd_get_initial_password:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 188):
+	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+	echo ""
 
 app_build_all: app_build_gateway app_build_datasource
 #  Implicit rule search has not been done.
@@ -529,30 +699,30 @@ init_namespaces:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 22):
+#  recipe to execute (from 'Makefile', line 28):
 	kubectl apply -f stack/namespace_init/namespaces.yaml
 
 create_readonly_role_sa:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 15):
-	k apply -f set-role-for-serviceaccount.yaml
+#  recipe to execute (from 'Makefile', line 21):
+	kubectl apply -f set-role-for-serviceaccount.yaml
 
 # files hash-table stats:
-# Load=42/1024=4%, Rehash=0, Collisions=1/66=2%
+# Load=61/1024=6%, Rehash=0, Collisions=1/104=1%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 67 / storage = 1068 B / avg = 15 B
-# current buf: size = 8162 B / used = 1068 B / count = 67 / avg = 15 B
+# strcache buffers: 1 (0) / strings = 91 / storage = 1455 B / avg = 15 B
+# current buf: size = 8162 B / used = 1455 B / count = 91 / avg = 15 B
 
-# strcache performance: lookups = 123 / hit rate = 45%
+# strcache performance: lookups = 185 / hit rate = 50%
 # hash-table stats:
-# Load=67/8192=1%, Rehash=0, Collisions=0/123=0%
-# Finished Make data base on Wed Aug 10 08:16:01 2022
+# Load=91/8192=1%, Rehash=0, Collisions=0/185=0%
+# Finished Make data base on Tue Aug 16 08:32:29 2022
 
  

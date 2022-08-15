@@ -19,7 +19,7 @@ resources:
   icon: docker
   source:
     repository: phiroict/training_k8s_rust_gateway
-    tag: 20220813.1
+    tag: latest
     username: ((registry-username.registry-username))
     password: ((registry-password.registry-password))
 - name: build-container-ds-repo
@@ -27,7 +27,7 @@ resources:
   icon: docker
   source:
     repository: phiroict/training_k8s_rust_datasource
-    tag: 20220813.1
+    tag: latest
     username: ((registry-username.registry-username))
     password: ((registry-password.registry-password))
 
@@ -43,13 +43,6 @@ resources:
     initial_version: 20220813.1.0
 
 jobs:
-- name: the-gate  # manually trigger this job
-  plan:
-  - get: gateway-project
-    trigger: false
-    passed:  # fan-in from the three pre-gate jobs
-      - build-ms-gateway
-      - build-ms-datasource
 - name: build-ms-gateway
   plan:
   - get: version
@@ -101,14 +94,14 @@ jobs:
           - "app-gateway"
           - "$(cat gateway-project/version)"
           - "gateway-project"
-  - put: version
-    params: {file: version/version , bump: minor}
   - put: gateway-project
     params:
       repository: gateway-project
+# Job : Build datasource
 - name: build-ms-datasource
   plan:
   - get: version
+    passed: [build-ms-gateway]
   - get: gateway-project
     trigger: false
   - get: rust-builder
@@ -132,9 +125,31 @@ jobs:
         CONTEXT: gateway-project
         BUILD_ARG_app_name: datasource
         BUILD_ARG_path: apps
+  - task: set-updated-image
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: python
+      inputs:
+      - name: gateway-project
+      outputs:
+      - name: gateway-project
+      run:
+        path: bash
+        args:
+          - "gateway-project/update_build_extension.sh"
+          - "gateway-project/stack/kustomize/base/01-deployment.yaml"
+          - "app-datasource"
+          - "$(cat gateway-project/version)"
+          - "gateway-project"
   - put: build-container-ds-repo
     params:
       image: image/image.tar
       additional_tags: version/version
   - put: version
     params: {file: version/version , bump: minor}
+  - put: gateway-project
+    params:
+      repository: gateway-project

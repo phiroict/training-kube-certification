@@ -150,7 +150,8 @@ concourse_init:
 	sudo cp -p concourse/bin/concourse /usr/bin/concourse
 	cd concourse/fly-assets && tar -xzvf fly-linux-amd64.tgz
 	sudo cp -p concourse/fly-assets/fly /usr/bin/fly
-concourse_keygen:
+concourse_keygen:	
+	kubectl apply -f ci/concourse/infra/concourse-namespace.yaml
 	cd concourse/bin && ./concourse generate-key -t rsa -f ../../ci/concourse/secrets/session_signing_key
 	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/tsa_host_key
 	cd concourse/bin && ./concourse generate-key -t ssh -f ../../ci/concourse/secrets/worker_key
@@ -170,6 +171,7 @@ concourse_create:
 	bash ./read_secrets_into_k8s_cluster.sh
 concourse_delete:
 	cd ci/concourse/infra && kubectl delete -k .
+concourse_install: concourse_keygen concourse_create
 concourse_all: concourse_init concourse_keygen concourse_create
 concourse_secrets:
 	source ci/concourse/secrets/git.creds && kubectl create secret generic registry-username -n concourse-main --from-literal=registry-username=$(USERNAME) && kubectl create secret generic registry-password -n concourse-main --from-literal=registry-password=$(PASSWORD)
@@ -196,7 +198,7 @@ argocd_provision:
 # ############################################################################################################################################################################################################################################
 # Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
 # ######################################################################################################################
-provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_all minikube_set_hosts argocd_install minikube_dashboard concourse_web istio_kiali_dashboard argocd_dashboard
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install minikube_set_hosts argocd_install minikube_dashboard concourse_web istio_kiali_dashboard argocd_dashboard
 provision_mac_arm_minikube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
 
 # REBUILD ALL ################################################################################################################################################################################################################################

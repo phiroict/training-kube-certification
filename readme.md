@@ -39,6 +39,19 @@ Optional:
 
 # Implementation setup
 
+## TL;DR; express setup
+Run the following make steps:
+
+### Initial 
+
+- `init_archlinux` (Or equivalent for your OS)
+- `concourse_init`
+- Manual: Set the secrets in `ci/concourse/secrets` [see](### Set_passwords)
+  - git.creds
+  - docker.creds 
+- `provision_minikube`
+
+
 ## Setup password files 
 See concourse [passwords](###Set_passwords)
 
