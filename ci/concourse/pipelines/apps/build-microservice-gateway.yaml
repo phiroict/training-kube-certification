@@ -5,11 +5,15 @@ resources:
   source:
     uri: https://github.com/phiroict/training-kube-certification
     branch: main
+    username: ((git-username.git-username))
+    password: ((git-password.git-password))
+
 - name: rust-builder
   type: registry-image
   source:
     repository: rust
     tag: latest
+
 - name: build-container-repo
   type: registry-image
   icon: docker
@@ -39,6 +43,13 @@ resources:
     initial_version: 20220813.1.0
 
 jobs:
+- name: the-gate  # manually trigger this job
+  plan:
+  - get: gateway-project
+    trigger: false
+    passed:  # fan-in from the three pre-gate jobs
+      - build-ms-gateway
+      - build-ms-datasource
 - name: build-ms-gateway
   plan:
   - get: version
@@ -70,8 +81,34 @@ jobs:
     params:
       image: image/image.tar
       additional_tags: version/version
+  - task: set-updated-image
+
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: python
+      inputs:
+      - name: gateway-project
+      outputs:
+      - name: gateway-project
+      run:
+        path: pip
+        args:
+        - "install"
+        - "--no-input"
+        - "yaml"
+      run:
+        path: python
+        args:
+          - "gateway-project/update_build_extension.py"
+          - "gateway-project/stack/kustomize/base/01-deployment.yaml"
+          - "app-gateway"
+          - "$(cat gateway-project/version)"
   - put: version
     params: {file: version/version , bump: minor}
+  - put: gateway-project
 - name: build-ms-datasource
   plan:
   - get: version
