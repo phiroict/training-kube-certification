@@ -94,18 +94,13 @@ jobs:
       outputs:
       - name: gateway-project
       run:
-        path: pip
+        path: bash
         args:
-        - "install"
-        - "--no-input"
-        - "yaml"
-      run:
-        path: python
-        args:
-          - "gateway-project/update_build_extension.py"
+          - "gateway-project/update_build_extension.sh"
           - "gateway-project/stack/kustomize/base/01-deployment.yaml"
           - "app-gateway"
           - "$(cat gateway-project/version)"
+          - "gateway-project"
   - put: version
     params: {file: version/version , bump: minor}
   - put: gateway-project
