@@ -164,19 +164,34 @@ concourse_keygen:
 	kubectl create secret generic tsa-host-public -n concourse-main  --from-file=ci/concourse/secrets/tsa_host_key.pub
 	kubectl create secret generic worker-private -n concourse-main  --from-file=ci/concourse/secrets/worker_key
 	kubectl create secret generic worker-public  -n concourse-main  --from-file=ci/concourse/secrets/worker_key.pub
-	rm -f ci/concourse/secrets/*
+	rm -f ci/concourse/secrets/session_signing_key ci/concourse/secrets/tsa_host_key ci/concourse/secrets/worker_key
 concourse_create:
 	cd ci/concourse/infra && kubectl apply -k .
+	bash ./read_secrets_into_k8s_cluster.sh
 concourse_delete:
 	cd ci/concourse/infra && kubectl delete -k .
 concourse_all: concourse_init concourse_keygen concourse_create
 concourse_secrets:
 	source ci/concourse/secrets/git.creds && kubectl create secret generic registry-username -n concourse-main --from-literal=registry-username=$(USERNAME) && kubectl create secret generic registry-password -n concourse-main --from-literal=registry-password=$(PASSWORD)
+## Manual CI deploys
+concourse_login:
+	fly --target main login --concourse-url http://concourse.info:32080/
+concourse_pipeline_deploy:
+	cd ci/concourse/pipelines/apps && cat build-microservice-gateway.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
 
 # CD -------------------------------------------------------------------------------------------------------------------
 argocd_install:
 	kubectl create ns argocd
 	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+	nohup kubectl port-forward svc/argocd-server -n argocd 8082:443 &
+argocd_get_initial_password:
+	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+	echo ""
+argocd_provision:
+	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
+	kubectl config get-contexts -o name
+	argocd cluster add --insecure minikube
+	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace dev-applications
 
 # ############################################################################################################################################################################################################################################
 # Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
