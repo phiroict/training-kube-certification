@@ -3,7 +3,7 @@
   "app": "npx ts-node main.ts",
   "projectId": "6dd116bb-20bd-49d6-9fb5-0ec88a1d1033",
   "sendCrashReports": "true",
-  "terraformProviders":  ["azurerm@~> 3.11.0", "microsoft/azuredevops@~> 0.2.1"],
+  "terraformProviders":  ["azurerm@~> 3.18.0", "microsoft/azuredevops@~> 0.2.2"],
   "terraformModules": [],
   "context": {
     "excludeStackIdFromLogicalIds": "true",
