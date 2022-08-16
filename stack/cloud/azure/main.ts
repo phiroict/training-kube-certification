@@ -46,7 +46,7 @@ class MyStack extends TerraformStack {
       defaultNodePool: {
         name: "default",
         nodeCount: 3,
-        vmSize: "Standard_D2_v2"
+        vmSize: "Standard_D3_v2"
       },
       location: rg.location,
       resourceGroupName: rg.name,

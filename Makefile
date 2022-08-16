@@ -240,6 +240,8 @@ bounce_minikube: minikube_delete provision_minikube
 # ###############
 # Azure
 # ###############
+az_login:
+	az login
 az_cdk_init:
 	npm install -g cdktf-cli
 	mkdir -p stack/cloud/azure && cd stack/cloud/azure && cdktf init --template="typescript" --local
