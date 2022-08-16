@@ -94,14 +94,36 @@ jobs:
           - "app-gateway"
           - "phiroict/training_k8s_rust_gateway:gateway-project/version"
           - "gateway-project"
-  - put: version
-    params: {file: version/version , bump: minor}
-
+  - task: commit
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: concourse/buildroot
+          tag: git
+      inputs:
+      - name: gateway-project
+      outputs:
+      - name: gateway-project
+      run:
+        path: /bin/bash
+        args:
+        - -c
+        - |
+          set -eux
+          cd gateway-project
+          git config --global user.name "Concourse builder"
+          git config --global user.email "concourse@phiroict.co.nz"
+          git status
+          git commit -am "Set new buildnumber in deployment gateway app"
   - put: gateway-project
     params:
       repository: gateway-project
       merge: true
-      force: true
+  - put: version
+    params: {file: version/version , bump: minor}
+
 # Job : Build datasource
 - name: build-ms-datasource
   plan:
@@ -150,14 +172,36 @@ jobs:
           - "app-datasource"
           - "phiroict/training_k8s_rust_datasource:gateway-project/version"
           - "gateway-project"
+  - task: commit
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: concourse/buildroot
+          tag: git
+      inputs:
+      - name: gateway-project
+      outputs:
+      - name: gateway-project
+      run:
+        path: /bin/bash
+        args:
+        - -c
+        - |
+          set -eux
+          cd gateway-project
+          git config --global user.name "Concourse builder"
+          git config --global user.email "concourse@phiroict.co.nz"
+          git status
+          git commit -am "Set new buildnumber in deployment datasource app"
   - put: build-container-ds-repo
     params:
       image: image/image.tar
       additional_tags: version/version
-  - put: version
-    params: {file: version/version , bump: minor}
   - put: gateway-project
     params:
       repository: gateway-project
-      force: true
       merge: true
+  - put: version
+    params: {file: version/version , bump: minor}

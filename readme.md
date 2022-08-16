@@ -336,7 +336,7 @@ source <(fly completion --shell bash)
 ## concourse create pipeline 
 ```bash
 cd ci/concourse/pipeline/apps
-cat build-microservice-gateway.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
+cat build-microservice-gateway-dev.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
 ```
 
 ### Set_passwords 

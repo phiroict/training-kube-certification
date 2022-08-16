@@ -178,8 +178,14 @@ concourse_secrets:
 ## Manual CI deploys
 concourse_login:
 	fly --target main login --concourse-url http://concourse.info:32080/
-concourse_pipeline_deploy:
-	cd ci/concourse/pipelines/apps && cat build-microservice-gateway.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
+concourse_pipeline_deploy_dev:
+	cd ci/concourse/pipelines/apps && cat build-microservice-gateway-dev.yaml | fly -t main set-pipeline --pipeline ms-build-gateway-dev --config -
+concourse_pipeline_deploy_test:
+	cd ci/concourse/pipelines/apps && cat build-microservice-gateway-test.yaml | fly -t main set-pipeline --pipeline ms-build-gateway-test --config -
+concourse_pipeline_deploy_uat:
+	cd ci/concourse/pipelines/apps && cat build-microservice-gateway-uat.yaml | fly -t main set-pipeline --pipeline ms-build-gateway-uat --config -
+concourse_pipeline_deploy_prod:
+	cd ci/concourse/pipelines/apps && cat build-microservice-gateway-prod.yaml | fly -t main set-pipeline --pipeline ms-build-gateway-prod --config -
 
 # CD -------------------------------------------------------------------------------------------------------------------
 argocd_install:
@@ -193,12 +199,16 @@ argocd_provision:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
 	argocd cluster add --insecure minikube
-	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace dev-applications
-
+	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace  --sync-policy auto dev-applications
+	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  --sync-policy auto test-applications
+	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server https://$(shell minikube ip):8443 --dest-namespace  --sync-policy auto uat-applications
+	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server https://$(shell minikube ip):8443 --dest-namespace  --sync-policy none prod-applications
+sleep:
+	sleep 30
 # ############################################################################################################################################################################################################################################
 # Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
 # ######################################################################################################################
-provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install minikube_set_hosts argocd_install minikube_dashboard concourse_web istio_kiali_dashboard argocd_dashboard
+provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install minikube_set_hosts argocd_install sleep argocd_provision minikube_dashboard concourse_web istio_kiali_dashboard argocd_dashboard
 provision_mac_arm_minikube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
 
 # REBUILD ALL ################################################################################################################################################################################################################################

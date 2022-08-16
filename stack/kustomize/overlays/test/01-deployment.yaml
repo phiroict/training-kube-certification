@@ -6,19 +6,13 @@ metadata:
   namespace: dev-applications
   labels:
     app:  app-gateway
-
 spec:
   replicas: 5
   template:
     spec:
-      # initContainers:
-        # Init containers are exactly like regular containers, except:
-          # - Init containers always run to completion.
-          # - Each init container must complete successfully before the next one starts.
       containers:
       - name:  app-gateway
-  
-        image: phiroict/training_k8s_rust_gateway@20220813.7.0
+        image: phiroict/training_k8s_rust_gateway@20220813.20.0
         resources:
           requests:
             cpu: 1000m
@@ -39,13 +33,9 @@ spec:
   replicas: 5
   template:
     spec:
-      # initContainers:
-        # Init containers are exactly like regular containers, except:
-          # - Init containers always run to completion.
-          # - Each init container must complete successfully before the next one starts.
       containers:
       - name:  app-datasource
-        image: phiroict/training_k8s_rust_datasource@22020813.7.0
+        image: phiroict/training_k8s_rust_datasource@20220813.20.0
         resources:
           requests:
             cpu: 1000m
