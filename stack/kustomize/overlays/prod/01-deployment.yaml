@@ -8,7 +8,7 @@ metadata:
     app:  app-gateway
 
 spec:
-  replicas: 5
+  replicas: 2
   template:
     spec:
       containers:
@@ -30,7 +30,7 @@ metadata:
   labels:
     app:  app-datasource
 spec:
-  replicas: 5
+  replicas: 2
   template:
     spec:
       containers:
