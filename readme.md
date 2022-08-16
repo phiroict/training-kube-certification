@@ -52,6 +52,12 @@ Run the following make steps:
   - docker.creds 
 - `provision_minikube`
 
+We are also implementing cloud deployments (Azure AKS, AWS EKS, and Google GKS) initially we will set up 
+azure AKS as we need to sort ingress and access. This would be slightly different for the cloud providers as these can 
+use load balancers to export traffic.   
+We keep you posted as we go along. 
+
+
 
 ## Setup password files 
 See concourse [passwords](###Set_passwords)
@@ -105,6 +111,21 @@ These create the stack on several virtualization platforms. If you are an experi
 were the three I tested it on.
 More info [here](https://minikube.sigs.k8s.io/docs/drivers/)  
 More info about [minikube](https://minikube.sigs.k8s.io/docs/)  
+
+### Azure AKS 
+For this the infra is changed a bit to use ingresses and the services will be changed to type of load balancer. 
+```
+TODO 20220817: 
+- concourse worker issue 
+- concourse web expose
+- gateway app exposure through istio gateway 
+- istio dashboards exposure. 
+```
+
+
+### AWS EKS
+
+### Google GKS 
 
 ## Makefile 
 
