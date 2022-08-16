@@ -199,10 +199,11 @@ argocd_provision:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
 	argocd cluster add --insecure minikube
-	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace  --sync-policy auto dev-applications
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  --sync-policy auto test-applications
-	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server https://$(shell minikube ip):8443 --dest-namespace  --sync-policy auto uat-applications
-	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server https://$(shell minikube ip):8443 --dest-namespace  --sync-policy none prod-applications
+	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace  dev-applications --sync-policy auto
+	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  test-applications --sync-policy auto
+	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  test-applications --sync-policy auto
+	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server https://$(shell minikube ip):8443 --dest-namespace  uat-applications  --sync-policy auto
+	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server https://$(shell minikube ip):8443 --dest-namespace   prod-applications --sync-policy none
 sleep:
 	sleep 30
 # ############################################################################################################################################################################################################################################
