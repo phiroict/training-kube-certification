@@ -27,6 +27,7 @@
         - rustup
         - wireshark-qt
         - argocd
+        - k9s
     - name: Install rust
       shell: rustup install stable
       become_user: phiro

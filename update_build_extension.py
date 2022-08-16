@@ -27,4 +27,8 @@ with open(path, 'r') as reader:
         out.append(doc)
     with open(path, "w") as writer:
         yaml.dump_all(out, writer, Dumper=yaml.Dumper)
+
 print("Image injection complete.")
+with open(path, 'r') as reader:
+    file_contents = "\n".join(reader.readlines())
+    print("DEBUG: File contents:\n{}".format(file_contents))

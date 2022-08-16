@@ -34,6 +34,7 @@
 Optional:
 - minikube
 - wireshark
+- k9s (Commandline k8s maintenance) 
 
 
 
