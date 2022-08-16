@@ -6,7 +6,7 @@ concourse_version=7.8.2
 # Archlinux setup
 init_archlinux:
 	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt argocd k9s --needed
-	yay -S docker-machine-driver-kvm2 libvirt qemu-headless ebtables --needed
+	yay -S docker-machine-driver-kvm2 libvirt qemu-headless ebtables google-cloud-sdk --needed
 	sudo systemctl enable libvirtd.service
 	sudo systemctl start libvirtd.service
 	sudo usermod -a -G libvirt $(whoami)
@@ -215,3 +215,15 @@ provision_mac_arm_minikube: istio_init_arm init_namespaces istio_inject istio_ex
 # REBUILD ALL ################################################################################################################################################################################################################################
 bounce_minikube: minikube_delete provision_minikube
 # ############################################################################################################################################################################################################################################
+
+# ############################################################################################################################################################################################################################################
+# Cloud
+# ############################################################################################################################################################################################################################################
+
+# Azure
+
+
+# Google
+
+
+# AWS

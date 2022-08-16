@@ -46,7 +46,6 @@ jobs:
 - name: build-ms-gateway
   plan:
   - get: version
-    params: {bump: minor}
   - get: gateway-project
     trigger: false
   - get: rust-builder
@@ -121,8 +120,8 @@ jobs:
     params:
       repository: gateway-project
       merge: true
-  - put: version
-    params: {file: version/version , bump: minor}
+#  - put: version
+#    params: {file: version/version , bump: minor}
 
 # Job : Build datasource
 - name: build-ms-datasource
@@ -203,5 +202,14 @@ jobs:
     params:
       repository: gateway-project
       merge: true
+  - put: version
+    params: {file: version/version , bump: minor}
+- name: set-version-to-the-next
+  plan:
+  - get: version
+    params: {file: version/version , bump: minor}
+    passed:
+    - build-ms-gateway
+    - build-ms-datasource
   - put: version
     params: {file: version/version , bump: minor}
