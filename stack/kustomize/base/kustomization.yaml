@@ -5,4 +5,4 @@ resources:
 - 00-service-account.yaml
 - 01-deployment.yaml
 - 02-service.yaml
-- 03-ingress.yaml
+#- 03-ingress.yaml
