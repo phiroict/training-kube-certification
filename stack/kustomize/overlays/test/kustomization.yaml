@@ -6,7 +6,7 @@ namespace: test-applications
 patchesStrategicMerge:
 - 01-deployment.yaml
 - 02-service.yaml
-#- 03-ingress.yaml
+- 03-ingress.yaml
 patchesJSON6902:
 - patch: |-
    - op: replace

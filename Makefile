@@ -6,7 +6,7 @@ istio_version_arm=1.14.3
 nginx_ingress_controller_version=1.3.0
 concourse_version=7.8.2
 MTF_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa.pub)
-K8S_CLUSTER="phiroict-cluster-ff152115.hcp.eastus.azmk8s.io"
+K8S_CLUSTER="phiroict-cluster-8bd3ee5a.hcp.eastus.azmk8s.io:443"
 # Archlinux setup
 init_archlinux:
 	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt argocd k9s --needed
@@ -214,11 +214,11 @@ argocd_provision_azure:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
 	argocd cluster add PhiRo-Training-Cluster
-	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(K8S_CLUSTER):443 --dest-namespace  dev-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(K8S_CLUSTER):443 --dest-namespace  test-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(K8S_CLUSTER):443 --dest-namespace  test-applications --sync-policy auto
-	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server https://$(K8S_CLUSTER):443 --dest-namespace  uat-applications  --sync-policy auto
-	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server https://$(K8S_CLUSTER):443 --dest-namespace   prod-applications --sync-policy none
+	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(K8S_CLUSTER) --dest-namespace  dev-applications --sync-policy auto
+	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(K8S_CLUSTER) --dest-namespace  test-applications --sync-policy auto
+	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(K8S_CLUSTER) --dest-namespace  test-applications --sync-policy auto
+	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server https://$(K8S_CLUSTER) --dest-namespace  uat-applications  --sync-policy auto
+	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server https://$(K8S_CLUSTER) --dest-namespace   prod-applications --sync-policy none
 
 sleep:
 	sleep 30
@@ -228,7 +228,7 @@ sleep:
 provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install minikube_set_hosts argocd_install sleep argocd_provision minikube_dashboard concourse_web istio_kiali_dashboard argocd_dashboard
 provision_mac_arm_minikube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
 
-provision_cloud: istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install argocd_install sleep argocd_provision_azure concourse_web istio_kiali_dashboard argocd_dashboard
+provision_cloud_aks: az_cdk_deploy az_cdk_get_credentials istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install argocd_install sleep argocd_provision_azure concourse_web istio_kiali_dashboard argocd_dashboard
 # REBUILD ALL ################################################################################################################################################################################################################################
 bounce_minikube: minikube_delete provision_minikube
 # ############################################################################################################################################################################################################################################
@@ -254,7 +254,7 @@ az_cdk_get_credentials:
 	# Interactive login, get the credentials from the portal -> MTFContainerRegistry->[Access Keys]
 	# docker login phiroicttrainingdemo.azurecr.io
 	# Get the certificates and install these in the `.kube/config`
-	az aks get-credentials --resource-group training_k8s_rs --name PhiRo-Training-Cluster
+	az aks get-credentials --overwrite-existing --resource-group training_k8s_rs --name PhiRo-Training-Cluster
 az_cdk_destroy:
 	cd stack/cloud/azure && cdktf destroy --auto-approve
 

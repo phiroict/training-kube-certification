@@ -45,7 +45,7 @@ class MyStack extends TerraformStack {
     new KubernetesCluster(this, "kubernetes-cluster", {
       defaultNodePool: {
         name: "default",
-        nodeCount: 3,
+        nodeCount: 2,
         vmSize: "Standard_D3_v2"
       },
       location: rg.location,

@@ -121,7 +121,19 @@ TODO 20220817:
 - gateway app exposure through istio gateway 
 - istio dashboards exposure. 
 ```
+Initial run: 
 
+```bash
+az login
+# Once at the start if nothing has been set up.
+make az_cdk_init
+# On each change on the infra
+make az_cdk_get 
+```
+This will provision the infra on the cloud, now create the stack by running: 
+```bash
+make provision_cloud_aks
+```
 
 ### AWS EKS
 
