@@ -234,10 +234,10 @@ The tasks defined in there are:
 | istio_extras_arm                | Installs extra tools for istio, kialis, prometheus, grafana, etc.                                                                                |
 | minikube_dashboard              | Shows the k8s dashboard                                                                                                                          |
 | kiali_dashboard                 | Sows the kiali dashboard                                                                                                                         |
-| concourse_init                  | Downloads concourse CI on k8s, creates the `ci` namespace                                                                                        |
+| concourse_init                  | Downloads concourse CI on k8s, creates the `concourse-main` namespace                                                                                        |
 | concourse_keygen                | Generate keys for concourse                                                                                                                      |
 | concourse_create                | Creates the stack for concourse, needs init and keygen to have run at least once                                                                 |
-| concourse_delete                | Remove the concourse stack, leaves the `ci` namespace                                                                                            
+| concourse_delete                | Remove the concourse stack, leaves the `concourse-main` namespace                                                                                            
 | concourse_all                   | Runs complete concourse installation                                                                                                             |
 | concourse_web                   | Opens the concourse web site                                                                                                                     |
 | provision_minikube              | Builds the complete kubernetes stack with apps, services, istio, and concourse                                                                   |
@@ -272,10 +272,10 @@ It is created separately by the following make tasks
 
 | make task        | description                                                                                                                                                                      |
 |------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| concourse_init   | Run once to download concourse and create the `ci` namespace                                                                                                                     | 
+| concourse_init   | Run once to download concourse and create the `concourse-main` namespace                                                                                                                     | 
 | concourse_keygen | Generate the keys we use for setting up the stack, you need to run this before any `concourse_create` as the secrets are deleted from the system after applying it to kubernetes | 
 | concourse_create | Create the stack, assumes `concource_init` and `concourse_keygen` have run                                                                                                       |
-| concourse_delete | Clean up the stack except the `ci` namespace                                                                                                                                     |
+| concourse_delete | Clean up the stack except the `concourse-main` namespace                                                                                                                                     |
 | concourse_all | Runs concourse_init, keygen and create in one go for convenience |
 
 ## CD 
