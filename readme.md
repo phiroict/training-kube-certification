@@ -1,20 +1,27 @@
 # Goal 
- This is a project that is built while studying for the K8s certification. 
- It is a full stack project from application to deployment. 
-
+ This is a project that is built while studying for the K8s certification, and slowly turned into a full stack development
+ that can be deployed on cloud and local clusters.  
+ It is a full stack project from application to deployment, its aim is to be abled to be provisioned 95%+ automated. 
+## The project
  This will include 
  - Two applications in Rust using the Rocket webserver framework with a shared interface definition library and a template project.
  - Kustomize: For having one codebase for kubernetes and a set of variations per environment
  - Kubernetes: Several ways of using kubernetes in this project
-   - Build it yourselves with another [project](https://github.com/phiroict/training_k8s_cluster)
-   - Use minikube (See below)
+   - Build it yourselves with another [project](https://github.com/phiroict/training_k8s_cluster) with vagrant and packer
+   - Minikube
+   - Azure AKS (In progress)
+   - AWS EKS (Todo)
+   - Google GKS (Todo)
  - Using a service mesh `istio` for zero trust inner service encryption.
- - Using encryption for ingoing connections (TLS / istio certs? )
+ - Using encryption for ingoing connections (TLS / istio certs? ) TODO
  - Tests framework created in jmeter for content and saturation tests. 
- - CI: Jenkins container (todo)
- - CD: ArgoCD (todo)
-  
-
+ - CI: Concourse CI
+ - CD: ArgoCD
+ - Infrastructure provisioning by
+   - bash
+   - make
+   - CDKTF (Terraform source) - Typescript
+   - ansible 
 
 # Stack
 - A Linux system (this has been developed on an Arch linux machine, should work fine on other distros as well) 
@@ -30,12 +37,18 @@
 - rustup / rustc
 - kvm2 / qemu (There are other virtualisation platforms you can use, check the `Minikube` section of the make file as how to create them - I have been using the kvm2 stack as it is opensource)
 - jmeter
+- ansible
+- bash
+- make 
 
 Optional:
 - minikube
 - wireshark
 - k9s (Commandline k8s maintenance) 
-
+- azure-cli
+- aws-cli
+- aws-vault
+- gcloud  
 
 
 # Implementation setup
@@ -44,6 +57,7 @@ Optional:
 Run the following make steps:
 
 ### Initial 
+Run the make tasks, or the commands therein: 
 
 - `init_archlinux` (Or equivalent for your OS)
 - `concourse_init`
@@ -54,7 +68,8 @@ Run the following make steps:
 
 We are also implementing cloud deployments (Azure AKS, AWS EKS, and Google GKS) initially we will set up 
 azure AKS as we need to sort ingress and access. This would be slightly different for the cloud providers as these can 
-use load balancers to export traffic.   
+use load balancers to export traffic. There are several ways of access the cloud applications -> By port forwarding, (not for production) or istio gateways.   
+
 We keep you posted as we go along. 
 
 
@@ -116,10 +131,9 @@ More info about [minikube](https://minikube.sigs.k8s.io/docs/)
 For this the infra is changed a bit to use ingresses and the services will be changed to type of load balancer. 
 ```
 TODO 20220817: 
-- concourse worker issue 
-- concourse web expose
-- gateway app exposure through istio gateway 
-- istio dashboards exposure. 
+v concourse worker issue [added more vCPUs]
+v concourse web expose [forwarding it]
+  v istio dashboards exposure. [Port forwarding] 
 ```
 Initial run: 
 
@@ -134,6 +148,22 @@ This will provision the infra on the cloud, now create the stack by running:
 ```bash
 make provision_cloud_aks
 ```
+Now there are a few automation steps that need to be made when using the cloud. 
+- The cluster creates a public IP address we need to use for exposing. 
+```text
+20.232.236.3 gateway.example.com
+127.0.0.1 concourse.info
+```
+TODO is to create a step grabbing the public ip and passing it to the hosts file. 
+```text
+TODO : 20220818
+- gateway app exposure through istio gateway
+- create a step grabbing the public ip and passing it to the hosts file.
+- Fix build fail when the there are no changes in the system.
+- Full automated process. 
+
+```
+
 
 ### AWS EKS
 

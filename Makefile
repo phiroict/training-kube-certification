@@ -5,7 +5,7 @@ istio_version=1.14.3
 istio_version_arm=1.14.3
 nginx_ingress_controller_version=1.3.0
 concourse_version=7.8.2
-MTF_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa.pub)
+PHIRO_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa.pub)
 K8S_CLUSTER="phiroict-cluster-8bd3ee5a.hcp.eastus.azmk8s.io:443"
 # Archlinux setup
 init_archlinux:
@@ -145,7 +145,6 @@ argocd_dashboard:
 	nohup firefox http://localhost:8082&
 concourse_web:
 	nohup firefox http://concourse.info:32080 &
-
 # CI -------------------------------------------------------------------------------------------------------------------
 concourse_init:
 	rm -f concourse-*-linux-amd64.tgz*
@@ -181,6 +180,9 @@ concourse_install: concourse_keygen concourse_create
 concourse_all: concourse_init concourse_keygen concourse_create
 concourse_secrets:
 	source ci/concourse/secrets/git.creds && kubectl create secret generic registry-username -n concourse-main --from-literal=registry-username=$(USERNAME) && kubectl create secret generic registry-password -n concourse-main --from-literal=registry-password=$(PASSWORD)
+concourse_forward:
+	nohup kubectl port-forward svc/concourse-web-service -n concourse-main 32080:8080&
+
 ## Manual CI deploys
 concourse_login:
 	fly --target main login --concourse-url http://concourse.info:32080/

@@ -66,7 +66,7 @@ class MyStack extends TerraformStack {
       linuxProfile: {
         adminUsername: "ubuntu",
         sshKey: {
-          keyData: process.env["MTF_AKS_PUB_KEY"] || ""
+          keyData: process.env["PHIRO_AKS_PUB_KEY"] || ""
         }
       },
       networkProfile: {
