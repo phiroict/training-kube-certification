@@ -1,8 +1,26 @@
 # Goal 
  This is a project that is built while studying for the K8s certification, and slowly turned into a full stack development
  that can be deployed on cloud and local clusters.  
- It is a full stack project from application to deployment, its aim is to be abled to be provisioned 95%+ automated. 
+ It is a full stack project from application to deployment, its aim is to be abled to be provisioned 95%+ automated.
+
 ## The project
+### High level layout
+This will be a project that will deploy all components on one kubernetes stack. This stack could be local or on the cloud, for the 
+rest it does not matter much except for interfacing with the cluster. 
+It would like this. 
+
+![Concept](docs/images/Concept.png)
+
+### Architectural decisions 
+
+- The project is a mono repo to keep all components together for clarity. Note that this would better served as a poly repo splitting at least infra and code.
+- CI is concourse as this is a versatile tool for building but it can be replaced by any drop in solution.
+- ArgoCD is used to showcase the GitOps approach on kubernetes, but it could easily be done by any other CI/CD solution.
+- The target cluster is all in one, IRL you would have an infra cluster running CI/CD and provisioning other clusters from there.
+- There are minimal differences between the cloud cluster and minikube. The ingresses in minikube do not resolve to public addresses, the cloud ones do. 
+- There is no ambition to make this stack 100% automated, there are manual steps we try to automate as we go along but timeboxed out if this takes too long or is too fragile.
+
+### Contents 
  This will include 
  - Two applications in Rust using the Rocket webserver framework with a shared interface definition library and a template project.
  - Kustomize: For having one codebase for kubernetes and a set of variations per environment
