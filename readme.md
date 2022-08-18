@@ -13,7 +13,7 @@ It would like this.
 
 ### Architectural decisions 
 
-- The project is a mono repo to keep all components together for clarity. Note that this would better served as a poly repo splitting at least infra and code.
+- The project is a mono repo to keep all components together for clarity. Note that this would better served as a poly repo splitting at least infra and application code.
 - CI is concourse as this is a versatile tool for building but it can be replaced by any drop in solution.
 - ArgoCD is used to showcase the GitOps approach on kubernetes, but it could easily be done by any other CI/CD solution.
 - The target cluster is all in one, IRL you would have an infra cluster running CI/CD and provisioning other clusters from there.
