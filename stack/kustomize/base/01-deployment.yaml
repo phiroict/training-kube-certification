@@ -24,7 +24,7 @@ spec:
       - env:
         - name: DATASOURCE_URL
           value: datasource:8010/data
-        image: phiroict/training_k8s_rust_gateway:20220813.22.0
+        image: phiroict/training_k8s_rust_gateway:20220818.1.0
         livenessProbe:
           failureThreshold: 3
           initialDelaySeconds: 5
