@@ -460,3 +460,8 @@ Now get the secret for login
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
+# Notes on setup
+
+## AKS
+
+![img.png](docs/images/notes_aks_deployment.png)

@@ -6,7 +6,7 @@ istio_version_arm=1.14.3
 nginx_ingress_controller_version=1.3.0
 concourse_version=7.8.2
 PHIRO_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa.pub)
-K8S_CLUSTER="phiroict-cluster-8bd3ee5a.hcp.eastus.azmk8s.io:443"
+K8S_CLUSTER=$(shell  argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server')
 # Archlinux setup
 init_archlinux:
 	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt argocd k9s --needed
@@ -141,9 +141,10 @@ kiali_dashboard:
 	nohup istioctl dashboard grafana&
 	nohup istioctl dashboard jaeger&
 argocd_dashboard:
-	-nohup kubectl port-forward svc/argocd-server -n argocd 8082:443&
+	-nohup sh -c "kubectl port-forward svc/argocd-server -n argocd 8082:443"&  < /dev/null > /dev/null 2>&1 \n
 	nohup firefox http://localhost:8082&
 concourse_web:
+	nohup sh -c "kubectl port-forward svc/concourse-web-service -n concourse-main 32080:8080"& < /dev/null > /dev/null 2>&1 \n
 	nohup firefox http://concourse.info:32080 &
 # CI -------------------------------------------------------------------------------------------------------------------
 concourse_init:
@@ -181,7 +182,7 @@ concourse_all: concourse_init concourse_keygen concourse_create
 concourse_secrets:
 	source ci/concourse/secrets/git.creds && kubectl create secret generic registry-username -n concourse-main --from-literal=registry-username=$(USERNAME) && kubectl create secret generic registry-password -n concourse-main --from-literal=registry-password=$(PASSWORD)
 concourse_forward:
-	nohup kubectl port-forward svc/concourse-web-service -n concourse-main 32080:8080&
+	nohup sh -c "kubectl port-forward svc/concourse-web-service -n concourse-main 32080:8080"&  < /dev/null > /dev/null 2>&1 \n
 
 ## Manual CI deploys
 concourse_login:
@@ -199,7 +200,7 @@ concourse_pipeline_deploy_prod:
 argocd_install:
 	kubectl create ns argocd
 	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-	nohup kubectl port-forward svc/argocd-server -n argocd 8082:443 &
+	nohup sh -c "kubectl port-forward svc/argocd-server -n argocd 8082:443"& < /dev/null > /dev/null 2>&1 \n
 argocd_get_initial_password:
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 	echo ""
@@ -208,19 +209,18 @@ argocd_provision:
 	kubectl config get-contexts -o name
 	argocd cluster add --insecure minikube
 	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace  dev-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  test-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  test-applications --sync-policy auto
-	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server https://$(shell minikube ip):8443 --dest-namespace  uat-applications  --sync-policy auto
+	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  test-applications --sync-policy none
+	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server https://$(shell minikube ip):8443 --dest-namespace  uat-applications  --sync-policy none
 	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server https://$(shell minikube ip):8443 --dest-namespace   prod-applications --sync-policy none
 argocd_provision_azure:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
-	argocd cluster add PhiRo-Training-Cluster
-	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(K8S_CLUSTER) --dest-namespace  dev-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(K8S_CLUSTER) --dest-namespace  test-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(K8S_CLUSTER) --dest-namespace  test-applications --sync-policy auto
-	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server https://$(K8S_CLUSTER) --dest-namespace  uat-applications  --sync-policy auto
-	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server https://$(K8S_CLUSTER) --dest-namespace   prod-applications --sync-policy none
+	argocd cluster add PhiRo-Training-Cluster --yes
+	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server $(K8S_CLUSTER) --dest-namespace  dev-applications --sync-policy auto
+	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server $(K8S_CLUSTER) --dest-namespace  test-applications --sync-policy auto
+	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server $(K8S_CLUSTER) --dest-namespace  test-applications --sync-policy auto
+	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server $(K8S_CLUSTER) --dest-namespace  uat-applications  --sync-policy auto
+	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server $(K8S_CLUSTER) --dest-namespace   prod-applications --sync-policy none
 
 sleep:
 	sleep 30
