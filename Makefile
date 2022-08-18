@@ -6,7 +6,7 @@ istio_version_arm=1.14.3
 nginx_ingress_controller_version=1.3.0
 concourse_version=7.8.2
 PHIRO_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa.pub)
-K8S_CLUSTER=$(shell  argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server')
+
 # Archlinux setup
 init_archlinux:
 	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt argocd k9s --needed
@@ -123,7 +123,7 @@ istio_extras:
 	tar xfv istio-$(istio_version)-linux-amd64.tar.gz
 	kubectl apply -f istio-$(istio_version)/samples/addons/
 	rm -f istio-$(istio_version)-linux-amd64.tar.gz
-	sudo cp -pf istio-$(istio_version)/bin/istioctl  /usr/bin/istioctl
+	# sudo cp -pf istio-$(istio_version)/bin/istioctl  /usr/bin/istioctl
 	# kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v$(nginx_ingress_controller_version)/deploy/static/provider/cloud/deploy.yaml
 istio_extras_arm:
 	wget https://github.com/istio/istio/releases/download/$(istio_version_arm)/istio-$(istio_version_arm)-osx-arm64.tar.gz
@@ -144,7 +144,7 @@ argocd_dashboard:
 	-nohup sh -c "kubectl port-forward svc/argocd-server -n argocd 8082:443"&  < /dev/null > /dev/null 2>&1 \n
 	nohup firefox http://localhost:8082&
 concourse_web:
-	nohup sh -c "kubectl port-forward svc/concourse-web-service -n concourse-main 32080:8080"& < /dev/null > /dev/null 2>&1 \n
+	-nohup sh -c "kubectl port-forward svc/concourse-web-service -n concourse-main 32080:8080"& < /dev/null > /dev/null 2>&1 \n
 	nohup firefox http://concourse.info:32080 &
 # CI -------------------------------------------------------------------------------------------------------------------
 concourse_init:
@@ -174,7 +174,7 @@ concourse_keygen:
 	rm -f ci/concourse/secrets/session_signing_key ci/concourse/secrets/tsa_host_key ci/concourse/secrets/worker_key
 concourse_create:
 	cd ci/concourse/infra && kubectl apply -k .
-	bash ./read_secrets_into_k8s_cluster.sh
+	-bash ./read_secrets_into_k8s_cluster.sh
 concourse_delete:
 	cd ci/concourse/infra && kubectl delete -k .
 concourse_install: concourse_keygen concourse_create
@@ -182,7 +182,7 @@ concourse_all: concourse_init concourse_keygen concourse_create
 concourse_secrets:
 	source ci/concourse/secrets/git.creds && kubectl create secret generic registry-username -n concourse-main --from-literal=registry-username=$(USERNAME) && kubectl create secret generic registry-password -n concourse-main --from-literal=registry-password=$(PASSWORD)
 concourse_forward:
-	nohup sh -c "kubectl port-forward svc/concourse-web-service -n concourse-main 32080:8080"&  < /dev/null > /dev/null 2>&1 \n
+	-nohup sh -c "kubectl port-forward svc/concourse-web-service -n concourse-main 32080:8080"&  < /dev/null > /dev/null 2>&1 \n
 
 ## Manual CI deploys
 concourse_login:
@@ -200,7 +200,7 @@ concourse_pipeline_deploy_prod:
 argocd_install:
 	kubectl create ns argocd
 	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-	nohup sh -c "kubectl port-forward svc/argocd-server -n argocd 8082:443"& < /dev/null > /dev/null 2>&1 \n
+	-nohup sh -c "kubectl port-forward svc/argocd-server -n argocd 8082:443"& < /dev/null > /dev/null 2>&1 \n
 argocd_get_initial_password:
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 	echo ""
@@ -216,11 +216,10 @@ argocd_provision_azure:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
 	argocd cluster add PhiRo-Training-Cluster --yes
-	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server $(K8S_CLUSTER) --dest-namespace  dev-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server $(K8S_CLUSTER) --dest-namespace  test-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server $(K8S_CLUSTER) --dest-namespace  test-applications --sync-policy auto
-	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server $(K8S_CLUSTER) --dest-namespace  uat-applications  --sync-policy auto
-	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server $(K8S_CLUSTER) --dest-namespace   prod-applications --sync-policy none
+	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace  dev-applications --sync-policy auto
+	#argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace  test-applications --sync-policy none
+	#argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace  uat-applications  --sync-policy none
+	#argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace   prod-applications --sync-policy none
 
 sleep:
 	sleep 30
@@ -231,6 +230,7 @@ provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_
 provision_mac_arm_minikube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
 
 provision_cloud_aks: az_cdk_deploy az_cdk_get_credentials istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install argocd_install sleep argocd_provision_azure concourse_web istio_kiali_dashboard argocd_dashboard
+provision_cloud_aks_continuation:  argocd_provision_azure concourse_web istio_kiali_dashboard argocd_dashboard
 # REBUILD ALL ################################################################################################################################################################################################################################
 bounce_minikube: minikube_delete provision_minikube
 # ############################################################################################################################################################################################################################################

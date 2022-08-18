@@ -1,4 +1,5 @@
 source ci/concourse/secrets/git.creds
+kubectl delete secret -n concourse-main git-username git-password registry-username registry-password
 kubectl create secret generic git-username -n concourse-main --from-literal=git-username=$GUSERNAME
 kubectl create secret generic git-password -n concourse-main --from-literal=git-password=$GPASSWORD
 source ci/concourse/secrets/docker.creds

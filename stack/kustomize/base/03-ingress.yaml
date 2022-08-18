@@ -9,7 +9,7 @@ spec:
     app: app-gateway
   servers:
   - port:
-      number: 38000
+      number: 32000
       name: http
       protocol: HTTP
     hosts:
