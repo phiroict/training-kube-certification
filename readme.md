@@ -146,6 +146,21 @@ More info [here](https://minikube.sigs.k8s.io/docs/drivers/)
 More info about [minikube](https://minikube.sigs.k8s.io/docs/)  
 
 ### Azure AKS 
+Need: 
+- azure cli (az) 
+- azure admin account for at least one subscription 
+ 
+Stack will be created with 
+- az_login
+- az_cdk_init
+- az_cdk_get
+- az_cdk_deploy
+- az_cdk_get_credentials
+- az_cdk_destroy
+
+Full provision with make task: 
+- az_provision
+
 For this the infra is changed a bit to use ingresses and the services will be changed to type of load balancer. 
 ```
 TODO 20220817: 
@@ -175,10 +190,10 @@ Now there are a few automation steps that need to be made when using the cloud.
 TODO is to create a step grabbing the public ip and passing it to the hosts file. 
 ```text
 TODO : 20220818
-- gateway app exposure through istio gateway
-- create a step grabbing the public ip and passing it to the hosts file.
-- Fix build fail when the there are no changes in the system.
-- Full automated process. 
+- gateway app exposure through istio gateway (Service repo seems not to resolve) 
+- create a step grabbing the public ip and passing it to the hosts file. 
+- Fix build fail when the there are no changes in the system. 
+- Full automated process. (testing one instance now) 
 
 ```
 
@@ -197,6 +212,8 @@ The stack will be created with the aws_* make tasks:
 - aws_build : builds the cluster
 - aws_destroy : Cleans it up.  
 
+Full provision with make task:
+- aws_provision
 
 ### Google GKS 
 
