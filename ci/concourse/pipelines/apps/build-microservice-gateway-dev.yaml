@@ -211,5 +211,6 @@ jobs:
     passed:
     - build-ms-gateway
     - build-ms-datasource
+    trigger: true
   - put: version
     params: {file: version/version , bump: minor}

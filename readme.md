@@ -184,6 +184,19 @@ TODO : 20220818
 
 
 ### AWS EKS
+Needs: 
+- aws-vault
+- aws commandline 
+- aws admin account 
+- cdktf installed 
+
+The stack will be created with the aws_* make tasks:
+- aws_init : Initializes the node libraries (run once)
+- aws_bootstrap : Installs the s3 bucket for the state. (run once, change the name of the bucket :) )
+- aws_get : gets the cdktf libraries
+- aws_build : builds the cluster
+- aws_destroy : Cleans it up.  
+
 
 ### Google GKS 
 
@@ -416,7 +429,7 @@ source <(fly completion --shell bash)
 
 ## concourse create pipeline 
 ```bash
-cd ci/concourse/pipeline/apps
+cd ci/concourse/pipelines/apps
 cat build-microservice-gateway-dev.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
 ```
 

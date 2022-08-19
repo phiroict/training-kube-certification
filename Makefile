@@ -146,6 +146,10 @@ argocd_dashboard:
 concourse_web:
 	-nohup sh -c "kubectl port-forward svc/concourse-web-service -n concourse-main 32080:8080"& < /dev/null > /dev/null 2>&1 \n
 	nohup firefox http://concourse.info:32080 &
+concourse_pipeline_deploy:
+	fly --target main login --concourse-url http://concourse.info:32080/ --username phiro --password password
+	cd ci/concourse/pipelines/apps && cat build-microservice-gateway-dev.yaml | fly -t main set-pipeline --pipeline ms-build-gateway --config -
+
 # CI -------------------------------------------------------------------------------------------------------------------
 concourse_init:
 	rm -f concourse-*-linux-amd64.tgz*
@@ -223,14 +227,24 @@ argocd_provision_azure:
 
 sleep:
 	sleep 30
+sleep_long:
+	sleep 120
 # ############################################################################################################################################################################################################################################
 # Main runners  ----------------------------------------------------------------------------------------------------------------------------------------------------------
 # ######################################################################################################################
+# Minikube ##############
 provision_minikube: minikube_kvm2 istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install minikube_set_hosts argocd_install sleep argocd_provision minikube_dashboard concourse_web istio_kiali_dashboard argocd_dashboard
 provision_mac_arm_minikube: istio_init_arm init_namespaces istio_inject istio_extras_arm deploy_dev minikube_set_hosts minikube_dashboard concourse_web istio_kiali_dashboard
-
-provision_cloud_aks: az_cdk_deploy az_cdk_get_credentials istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install argocd_install sleep argocd_provision_azure concourse_web istio_kiali_dashboard argocd_dashboard
+# Azure ##############
+provision_cloud_aks: az_cdk_deploy az_cdk_get_credentials istio_init init_namespaces istio_inject istio_extras deploy_dev concourse_install argocd_install
 provision_cloud_aks_continuation:  argocd_provision_azure concourse_web istio_kiali_dashboard argocd_dashboard
+az_provision: provision_cloud_aks sleep_long provision_cloud_aks_continuation
+
+# AWS ##############
+
+# Google ###########
+
+# ## END ###########
 # REBUILD ALL ################################################################################################################################################################################################################################
 bounce_minikube: minikube_delete provision_minikube
 # ############################################################################################################################################################################################################################################
@@ -268,3 +282,15 @@ create_project:
 # ###############
 # AWS
 # ###############
+aws_init:
+	 cd stack/cloud/aws && npm install @cdktf/provider-aws
+
+	 cd stack/cloud/aws && cdktf provider add "aws@~>4.0"
+aws_bootstrap:
+	cd stack/cloud/aws/bootstrap && aws-vault exec home -- terraform init && aws-vault exec home -- terraform plan -out state.plan && aws-vault exec home -- terraform apply -auto-approve state.plan
+aws_get:
+	cd stack/cloud/aws && cdktf get
+aws_build:
+	cd stack/cloud/aws && aws-vault exec home -- cdktf synth && aws-vault exec home --no-session -- cdktf deploy --auto-approve
+aws_destroy:
+	cd stack/cloud/aws && aws-vault exec home --no-session -- cdktf destroy --auto-approve
