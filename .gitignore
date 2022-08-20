@@ -8,3 +8,5 @@ concourse/!/ci/concourse/pipelines
 concourse/!/ci/concourse/infra
 **/node_modules
 concourse/
+*.plan
+*.tfstate
