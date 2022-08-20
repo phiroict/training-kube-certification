@@ -3,7 +3,6 @@ import {Construct} from "constructs";
 See https://cdk.tf/provider-generation for more details.*/
 import * as kubernetes from "./.gen/providers/kubernetes";
 import * as aws from "./.gen/providers/aws";
-import * as random from "./.gen/providers/random";
 import * as Eks from "./.gen/modules/eks";
 import * as Vpc from "./.gen/modules/vpc";
 import {App, S3Backend, TerraformOutput, TerraformStack, TerraformVariable} from "cdktf";
@@ -18,6 +17,7 @@ class MyStack extends TerraformStack {
             key: "kubernetes-training-state.state",
             region: regionStr,
         });
+
         new AwsProvider(this, "AWS", {
             region: regionStr,
         });
@@ -34,17 +34,12 @@ class MyStack extends TerraformStack {
 
         /*This allows the Terraform resource name to match the original name. You can remove the call if you don't need them to match.*/
         cdktfTerraformOutputRegion.overrideLogicalId("region");
-        const randomStringSuffix = new random.StringResource(this, "suffix", {
-            length: 8,
-            special: false,
-        });
+
         const dataAwsAvailabilityZonesAvailable =
             new aws.datasources.DataAwsAvailabilityZones(this, "available", {});
 
-        new aws.AwsProvider(this, "aws", {
-            region: region.value,
-        });
-        const clusterName = `education-eks-\${${randomStringSuffix.result}}`;
+        const clusterName = `training-eks-phiro-test`;
+
         new TerraformOutput(this, "cluster_name", {
             value: clusterName,
             description: "Kubernetes Cluster Name",
@@ -153,3 +148,4 @@ class MyStack extends TerraformStack {
 
 const app = new App();
 new MyStack(app, "aws_instance");
+app.synth();

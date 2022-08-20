@@ -284,9 +284,12 @@ create_project:
 # AWS
 # ###############
 aws_init:
-	 cd stack/cloud/aws && npm install @cdktf/provider-aws
+	-cd stack/cloud/aws && rm -rf .gen node_modules
+	cd stack/cloud/aws && npm install
+	cd stack/cloud/aws && npm install @cdktf/provider-aws
 
-	 cd stack/cloud/aws && cdktf provider add "aws@~>4.0"
+	cd stack/cloud/aws && cdktf provider add "aws@~>4.0"
+	cd stack/cloud/aws && cdktf provider add "kubernetes@2.12.1"
 aws_bootstrap:
 	cd stack/cloud/aws/bootstrap && aws-vault exec home -- terraform init && aws-vault exec home -- terraform plan -out state.plan && aws-vault exec home -- terraform apply -auto-approve state.plan
 aws_get:
