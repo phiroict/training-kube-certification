@@ -3,8 +3,23 @@
   "app": "npx ts-node main.ts",
   "projectId": "0ed12475-8697-4571-a336-268fcb31e9cf",
   "sendCrashReports": "true",
-  "terraformProviders": ["aws@~>4.0"],
-  "terraformModules": [],
+  "terraformProviders": [
+    "aws@~>4.0",
+    "random@3.1.0",
+    "kubernetes@2.12.1"
+  ],
+  "terraformModules": [
+    {
+      "name": "vpc",
+      "source": "terraform-aws-modules/vpc/aws",
+      "version": "3.14.2"
+    },
+    {
+      "name": "eks",
+      "source": "terraform-aws-modules/eks/aws",
+      "version": "18.26.6"
+    }
+  ],
   "context": {
     "excludeStackIdFromLogicalIds": "true",
     "allowSepCharsInLogicalIds": "true"

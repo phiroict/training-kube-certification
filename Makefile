@@ -5,7 +5,7 @@ istio_version=1.14.3
 istio_version_arm=1.14.3
 nginx_ingress_controller_version=1.3.0
 concourse_version=7.8.2
-PHIRO_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa.pub)
+PHIRO_AKS_PUB_KEY=$(shell cat /home/phiro/.ssh/id_rsa.pub)
 
 # Archlinux setup
 init_archlinux:
@@ -241,6 +241,7 @@ provision_cloud_aks_continuation:  argocd_provision_azure concourse_web istio_ki
 az_provision: provision_cloud_aks sleep_long provision_cloud_aks_continuation
 
 # AWS ##############
+provision_cloud_aws: aws_build
 
 # Google ###########
 
@@ -291,6 +292,6 @@ aws_bootstrap:
 aws_get:
 	cd stack/cloud/aws && cdktf get
 aws_build:
-	cd stack/cloud/aws && aws-vault exec home -- cdktf synth && aws-vault exec home --no-session -- cdktf deploy --auto-approve
+	cd stack/cloud/aws && aws-vault exec home --region ap-southeast-2 -- cdktf synth aws_instance  && aws-vault exec home --no-session -- cdktf deploy aws_instance --auto-approve
 aws_destroy:
-	cd stack/cloud/aws && aws-vault exec home --no-session -- cdktf destroy --auto-approve
+	cd stack/cloud/aws && aws-vault exec home --region ap-southeast-2 --no-session -- cdktf destroy --auto-approve

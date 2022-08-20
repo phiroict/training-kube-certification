@@ -23,7 +23,7 @@
     "@cdktf/provider-aws": "^9.0.14",
     "aws-cdk-lib": "^2.38.1",
     "cdktf": "^0.12.1",
-    "constructs": "^10.1.79"
+    "constructs": "^10.1.81"
   },
   "devDependencies": {
     "@types/jest": "^28.1.7",
