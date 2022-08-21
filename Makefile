@@ -284,17 +284,30 @@ create_project:
 # AWS
 # ###############
 aws_init:
-	-cd stack/cloud/aws && rm -rf .gen node_modules
+	-cd stack/cloud/aws && rm -rf .gen node_modules package-lock.json
 	cd stack/cloud/aws && npm install
 	cd stack/cloud/aws && npm install @cdktf/provider-aws
 
-	cd stack/cloud/aws && cdktf provider add "aws@~>4.0"
+	cd stack/cloud/aws && cdktf provider add "aws@4.27.0"
 	cd stack/cloud/aws && cdktf provider add "kubernetes@2.12.1"
 aws_bootstrap:
 	cd stack/cloud/aws/bootstrap && aws-vault exec home -- terraform init && aws-vault exec home -- terraform plan -out state.plan && aws-vault exec home -- terraform apply -auto-approve state.plan
 aws_get:
 	cd stack/cloud/aws && cdktf get
+aws_synth:
+	cd stack/cloud/aws && aws-vault exec home --region ap-southeast-2 -- cdktf synth aws_instance
 aws_build:
-	cd stack/cloud/aws && aws-vault exec home --region ap-southeast-2 -- cdktf synth aws_instance  && aws-vault exec home --no-session -- cdktf deploy aws_instance --auto-approve
+	cd stack/cloud/aws && aws-vault exec home --no-session -- cdktf deploy aws_instance --auto-approve
 aws_destroy:
 	cd stack/cloud/aws && aws-vault exec home --region ap-southeast-2 --no-session -- cdktf destroy --auto-approve
+aws_eks_kubectl_config:
+	aws-vault exec home -- aws eks update-kubeconfig --region ap-southeast-2 --name $(shell aws-vault exec home -- aws eks list-clusters | jq -r '.clusters[0]')
+aws_wa_init:
+	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home -- terraform init
+aws_wa_plan:
+	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform plan -out plan.plan
+aws_wa_apply:
+	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform apply plan.plan
+aws_wa_destroy:
+	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform destroy -auto-apprive
+

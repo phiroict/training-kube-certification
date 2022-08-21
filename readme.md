@@ -204,7 +204,8 @@ Needs:
 - aws commandline 
 - aws admin account 
 - cdktf installed 
-
+- eksctl 
+- 
 The stack will be created with the aws_* make tasks:
 - aws_init : Initializes the node libraries (run once)
 - aws_bootstrap : Installs the s3 bucket for the state. (run once, change the name of the bucket :) )
@@ -214,6 +215,86 @@ The stack will be created with the aws_* make tasks:
 
 Full provision with make task:
 - aws_provision
+
+You need to set the aws as the home target. Otherwise you need to replace home with whatever name you choose. 
+
+```bash
+aws-vault add home
+```
+
+You can inject the session settings in a command with 
+
+```bash
+aws-vault exec home -- <command> 
+```
+You can make it an alias for brevity: 
+
+```bash
+alias a="aws-vault exec home --no-session -- "
+```
+
+Note the `--no-session` is needed for certain IAM creation actions as Federated users (the user with temporary credentials) are not allowed to do. 
+
+__Workaround__
+At the moment there is an issue with the generated terraform script. So we have a work around in place until the issue can be
+fixed. 
+
+__patch__
+
+`Cdktf.tf.json`
+
+line 83: Remove the brackets as it is a list not a string.
+
+```json
+"subnet_ids": "${module.vpc.private_subnets}",
+```
+Not
+```json
+"subnet_ids": ["${module.vpc.private_subnets}"],
+```
+
+
+`Eks-managed-node-group/main.tf`
+
+Line : 40
+Replace line with this
+
+```hcl
+launch_template_name_int = coalesce("long-value", var.launch_template_name, "${var.name}-eks-node-group")
+```
+
+Run the stack from the `training-kube-certification/stack/cloud/aws/cdktf.out/stacks/aws_instance` folder as the synth will overwrite and introduce the error again.
+
+Run there:
+```bash
+terraform init -upgrade
+terraform plan -out plan.plan
+terraform apply plan.plan
+```
+
+There are also some work around tasks in the make file, these run from the `cdk.tf.json` script you ought to have patched before 
+
+| make task      | desc                                   |
+|----------------|----------------------------------------|
+| aws_wa_init    | runs the init / upgrade terraform task | 
+| aws_wa_plan    | plans the terraform script             | 
+| aws_wa_apply   | applies the terraform script           | 
+| aws_wa_destroy | destroy the terraform script           | 
+
+
+It is not ideal but for now we do this this way until can fix the incorrect type setting.
+These are set in the aws_wa (Work Around) tasks I have added temporary.
+
+Now, if you want to use the portal to review the cluster, your user has no access to these so you need to run
+You need to install `eksctl` for this. 
+
+```bash
+aws-vault exec home --no-session --  eksctl create iamidentitymapping --cluster  training-eks-phiro-test --region=ap-southeast-2 --arn arn:aws:iam::774492638540:role/$(aws-vault exec home --no-session -- aws iam list-roles | jq -r '.Roles[].RoleName' | grep "0-eks*") --group system:masters --username phiro
+```
+Relogin and you should have access to the portal on aws. 
+
+You can now run the kubenetes tasks, note that you need to be logged in onto aws so you need to set the 
+environment correctly. Alternatively you can run each command with `aws-vault exec home --no-session -- ` prepended. 
 
 ### Google GKS 
 

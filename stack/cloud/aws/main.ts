@@ -5,7 +5,7 @@ import * as kubernetes from "./.gen/providers/kubernetes";
 import * as aws from "./.gen/providers/aws";
 import * as Eks from "./.gen/modules/eks";
 import * as Vpc from "./.gen/modules/vpc";
-import {App, S3Backend, TerraformOutput, TerraformStack, TerraformVariable} from "cdktf";
+import {App, S3Backend, TerraformOutput, TerraformStack, TerraformVariable, Fn} from "cdktf";
 import {AwsProvider} from "./.gen/providers/aws";
 
 class MyStack extends TerraformStack {
@@ -46,7 +46,7 @@ class MyStack extends TerraformStack {
         });
 
         const vpc = new Vpc.Vpc(this, "vpc", {
-            azs: dataAwsAvailabilityZonesAvailable.groupNames.slice(0,3),
+            azs: dataAwsAvailabilityZonesAvailable.names.slice(0,3),
             cidr: "10.0.0.0/16",
             enableDnsHostnames: true,
             enableNatGateway: true,
@@ -127,7 +127,7 @@ class MyStack extends TerraformStack {
             vpcId: vpc.vpcIdOutput,
         });
         new kubernetes.KubernetesProvider(this, "kubernetes", {
-            clusterCaCertificate: `\${base64decode(${eks.clusterCertificateAuthorityDataOutput})}`,
+            clusterCaCertificate: Fn.base64decode(eks.clusterCertificateAuthorityDataOutput),
             host: eks.clusterEndpointOutput,
         });
         new TerraformOutput(this, "cluster_endpoint", {
