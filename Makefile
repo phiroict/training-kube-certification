@@ -309,5 +309,5 @@ aws_wa_plan:
 aws_wa_apply:
 	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform apply plan.plan
 aws_wa_destroy:
-	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform destroy -auto-apprive
+	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform destroy -auto-approve
 
