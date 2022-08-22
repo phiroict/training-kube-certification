@@ -241,7 +241,7 @@ provision_cloud_aks_continuation:  argocd_provision_azure concourse_web istio_ki
 az_provision: provision_cloud_aks sleep_long provision_cloud_aks_continuation
 
 # AWS ##############
-provision_cloud_aws: aws_build
+provision_cloud_aws: aws_get aws_synth aws_wa_init aws_wa_patch aws_wa_plan aws_wa_apply
 
 # Google ###########
 
@@ -302,8 +302,11 @@ aws_destroy:
 	cd stack/cloud/aws && aws-vault exec home --region ap-southeast-2 --no-session -- cdktf destroy --auto-approve
 aws_eks_kubectl_config:
 	aws-vault exec home -- aws eks update-kubeconfig --region ap-southeast-2 --name $(shell aws-vault exec home -- aws eks list-clusters | jq -r '.clusters[0]')
-aws_wa_init:
+# As there is a generation error we need to patch before we run the set.
+aws_wa_init: aws_get aws_synth
 	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home -- terraform init
+aws_wa_patch:
+	cd stack/cloud/aws && python3 patch_cdk.tf.json.py
 aws_wa_plan:
 	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform plan -out plan.plan
 aws_wa_apply:
