@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/apps/datasource/datasource.iml" filepath="$PROJECT_DIR$/apps/datasource/datasource.iml" />
       <module fileurl="file://$PROJECT_DIR$/apps/gateway/gateway.iml" filepath="$PROJECT_DIR$/apps/gateway/gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/training-kube-certification.iml" filepath="$PROJECT_DIR$/.idea/training-kube-certification.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../training-kube-certification.wiki/training-kube-certification.wiki.iml" filepath="$PROJECT_DIR$/../training-kube-certification.wiki/training-kube-certification.wiki.iml" />
     </modules>
   </component>
 </project>

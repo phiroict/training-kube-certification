@@ -1,45 +1,17 @@
+
+
 # Goal 
  This is a project that is built while studying for the K8s certification, and slowly turned into a full stack development
  that can be deployed on cloud and local clusters.  
- It is a full stack project from application to deployment, its aim is to be abled to be provisioned 95%+ automated.
+ It is a full stack project from application to deployment, its aim is to be able to be provisioned 95%+ automated.
 
-## The project
-### High level layout
-This will be a project that will deploy all components on one kubernetes stack. This stack could be local or on the cloud, for the 
-rest it does not matter much except for interfacing with the cluster. 
-It would like this. 
+Most of the documentation can be read in the [wiki](https://github.com/phiroict/training-kube-certification/wiki)
+Check out the wiki [by](git@github.com:phiroict/training-kube-certification.wiki.git) 
+This readme will contain developer setup notes and observations, all other documentation is in the [wiki](https://github.com/phiroict/training-kube-certification/wiki). 
 
-![Concept](docs/images/Concept.png)
 
-### Architectural decisions 
 
-- The project is a mono repo to keep all components together for clarity. Note that this would better served as a poly repo splitting at least infra and application code.
-- CI is concourse as this is a versatile tool for building but it can be replaced by any drop in solution.
-- ArgoCD is used to showcase the GitOps approach on kubernetes, but it could easily be done by any other CI/CD solution.
-- The target cluster is all in one, IRL you would have an infra cluster running CI/CD and provisioning other clusters from there.
-- There are minimal differences between the cloud cluster and minikube. The ingresses in minikube do not resolve to public addresses, the cloud ones do. 
-- There is no ambition to make this stack 100% automated, there are manual steps we try to automate as we go along but timeboxed out if this takes too long or is too fragile.
 
-### Contents 
- This will include 
- - Two applications in Rust using the Rocket webserver framework with a shared interface definition library and a template project.
- - Kustomize: For having one codebase for kubernetes and a set of variations per environment
- - Kubernetes: Several ways of using kubernetes in this project
-   - Build it yourselves with another [project](https://github.com/phiroict/training_k8s_cluster) with vagrant and packer
-   - Minikube
-   - Azure AKS (In progress)
-   - AWS EKS (Todo)
-   - Google GKS (Todo)
- - Using a service mesh `istio` for zero trust inner service encryption.
- - Using encryption for ingoing connections (TLS / istio certs? ) TODO
- - Tests framework created in jmeter for content and saturation tests. 
- - CI: Concourse CI
- - CD: ArgoCD
- - Infrastructure provisioning by
-   - bash
-   - make
-   - CDKTF (Terraform source) - Typescript
-   - ansible 
 
 # Stack
 - A Linux system (this has been developed on an Arch linux machine, should work fine on other distros as well) 
@@ -362,19 +334,8 @@ The tasks defined in there are:
 # Design and use
 This is a complete stack development. This chapter will list some design choices.
 
-## Main flow
-In the whole stack these are the main components. Some details are omitted, we get to them later. 
 
-![Main flow](docs/images/High_level_kubernetes_flow.png)
 
-## Application flow
-From the apps folder we have two applications that are the applications that will run on the pods.  
-They are created from a template service project `service_template` setting up things like logging and
-some configuration of the Rust / Rocket configuration.
-
-The interface contract are captured in the Interface contract library: `application_interfaces` these
-are used by both services.  
-![Main flow ](docs/images/Rust_component_configuration.png)
 
 ## CI 
 
