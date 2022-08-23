@@ -65,7 +65,9 @@ use load balancers to export traffic. There are several ways of access the cloud
 
 We keep you posted as we go along. 
 
+## Building the applications
 
+See the [wiki](https://github.com/phiroict/training-kube-certification/wiki/Micro-Services)
 
 ## Setup password files 
 See concourse [passwords](https://github.com/phiroict/training-kube-certification/wiki/Secrets-And-Security#concourse)
@@ -158,6 +160,9 @@ The tasks defined in there are:
 | bounce_minikube                  | Tear down and completely rebuild the k8s stack.                                                                                                  |
 | argocd_install                   | Install the argcd component in its separate namespace                                                                                            |
 | argocd_dashboard                 | open the argocd dashboard, note that you need to get the secret as password from k8s see `### Get the password for argocd`                       |
+| argocd_get_initial_password      | Extracts the password from kubernetes to be able to log in                                                                                       | 
+| argocd_provision                 | Create the projects                                                                                                                              |
+| argocd_provision_azure           | Same but for azure (there are some processes that work differently there)                                                                        |
 | provision_cloud_aks              | First part of the provisioning of the azure stack                                                                                                |
 | provision_cloud_aks_continuation | second part after checking if the argocd instance was started correctly                                                                          |
 | az_provision                     | One go provisioning for azure with a long sleep before argocd is on line                                                                         |
