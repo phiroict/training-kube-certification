@@ -242,6 +242,7 @@ az_provision: provision_cloud_aks sleep_long provision_cloud_aks_continuation
 
 # AWS ##############
 provision_cloud_aws: aws_get aws_synth aws_wa_init aws_wa_patch aws_wa_plan aws_wa_apply
+deprovision_cloud_aws: aws_wa_patch aws_wa_destroy
 
 # Google ###########
 
