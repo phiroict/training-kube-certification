@@ -9,75 +9,16 @@ Most of the documentation can be read in the [wiki](https://github.com/phiroict/
 Check out the wiki [by](git@github.com:phiroict/training-kube-certification.wiki.git) 
 This readme will contain developer setup notes and observations, all other documentation is in the [wiki](https://github.com/phiroict/training-kube-certification/wiki). 
 
+## Setup Dev machine 
 
-
-# Setup your development environment 
-
-## Stack
-
-You need to install these applications to run this stack. 
-
-- A Linux system (this has been developed on an Arch linux machine, should work fine on other distros as well) 
-  - MacOS -> This is now the ARM platform so many container images need to be build for this platform, this is out of scope for this training. Good luck.
-  - MacOS and Windows use VM when running docker containers so this solution may not work without faffing network settings, again, outside scope and again, Good luck.
-  - For archlinux there is an ansible configuration playbook at `infra/ansible/dev-machine/playbook.yaml`, ran from the `make init_ansible` task.
-- git
-- kubectl
-- kubernetes cluster 
-- kustomize
-- make (or CMake)
-- istio (It will be overwritten during some make tasks, this is just for bootstrapping)
-- rustup / rustc
-- kvm2 / qemu (There are other virtualisation platforms you can use, check the `Minikube` section of the make file as how to create them - I have been using the kvm2 stack as it is opensource)
-- jmeter
-- ansible
-- bash
-- make 
-
-Optional but useful:
-- minikube
-- wireshark
-- k9s (Commandline k8s maintenance) 
-- azure-cli
-- aws-cli
-- aws-vault
-- gcloud  
-
-
-# Implementation setup
-
-## TL;DR; express setup
-Run the following make steps:
-
-### Initial 
-Run the make tasks, or the commands therein: 
-
-- `init_archlinux` (Or equivalent for your OS)
-- `concourse_init`
-- Manual: Set the secrets in `ci/concourse/secrets` [see](https://github.com/phiroict/training-kube-certification/wiki/Secrets-And-Security#concourse)
-  - git.creds
-  - docker.creds 
-- `provision_minikube`
-
-We are also implementing cloud deployments (Azure AKS, AWS EKS, and Google GKS) initially we will set up 
-azure AKS as we need to sort ingress and access. This would be slightly different for the cloud providers as these can 
-use load balancers to export traffic. There are several ways of access the cloud applications -> By port forwarding, (not for production) or istio gateways.   
-
-We keep you posted as we go along. 
+See the [Setup wiki](https://github.com/phiroict/training-kube-certification/wiki/Setup)
 
 ## Building the applications
 
 See the [wiki](https://github.com/phiroict/training-kube-certification/wiki/Micro-Services)
 
-## Setup password files 
-See concourse [passwords](https://github.com/phiroict/training-kube-certification/wiki/Secrets-And-Security#concourse)
 
-## Setup 
-Flow of the setup is: 
-- [if using archlinux] run `make init_archlinux` [install make first or run the commandline from the makefile directly]
-- [other oses] install the stack above
-- Then run the `make provision_minikube` 
-
+# Notes and tips
 ## Shortcuts 
 For the examples add: 
 ```text
