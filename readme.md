@@ -1,13 +1,13 @@
 # Full stack kubernetes project. 
 
 # Goal 
- This is a project that is built while studying for the K8s certification, and slowly turned into a full stack development
+ This is a project that was built while studying for the K8s certification, and slowly turned into a full stack development
  that can be deployed on cloud and local clusters.  
  It is a full stack project from application to deployment, its aim is to be able to be provisioned 95%+ automated.
 
-Most of the documentation can be read in the [wiki](https://github.com/phiroict/training-kube-certification/wiki)
+Most of the documentation can be found in the [wiki](https://github.com/phiroict/training-kube-certification/wiki)
 Check out the wiki [by](git@github.com:phiroict/training-kube-certification.wiki.git) 
-This readme will contain developer setup notes and observations, all other documentation is in the [wiki](https://github.com/phiroict/training-kube-certification/wiki). 
+This readme will contain developer setup notes and observations, all other documentation is in that [wiki](https://github.com/phiroict/training-kube-certification/wiki). 
 
 ## What to do? 
 - Setup development machine 
@@ -15,11 +15,20 @@ This readme will contain developer setup notes and observations, all other docum
 - Build applications 
 - Deploy CI and CD components.  
 
+Step by step with the links to the wiki follow below. 
+
+### Notes on AMD and ARM platforms. 
+Note that this has been done on an Arch linux system on a AMD64 platform, and was repeated on a macos on the ARM platform. Note that if you build for the ARM platform you need to match the 
+platform where kubernetes is running. MacOS running on the M1/M2 platform is ARM, the rest is AMD. TO be not confused try to keep it to the 
+Linux machine on the AMD platform. 
+The cloud deployment will run on the AMD platform so you will not have that issue. Just make sure you build your images through the CI not on your
+local machine. 
+
 ## Setup Dev machine 
 
 See the [Setup wiki](https://github.com/phiroict/training-kube-certification/wiki/Setup)
 
-## Build the kubernetes stack
+## Choose & Build the kubernetes stack
 See the [Setup wiki](https://github.com/phiroict/training-kube-certification/wiki/Kubernetes-Cluster-Provision)
 
 ## Building the applications
@@ -34,6 +43,8 @@ For the examples add:
 alias k=kubectl 
 ```
 to your  `.profile` or `.bashrc` or equivalent.
+
+You know can use the `k` instead of the `kubectl` command. You will be using this command a lot, so it matters.  
 
 ## Local machine
 [Arch linux] To use the opensource kvm2 version of minikube, follow the [instructions](`https://gist.github.com/grugnog/caa118205ad498423266f26150a5d555`) 
