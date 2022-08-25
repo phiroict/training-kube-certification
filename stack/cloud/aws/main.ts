@@ -47,12 +47,12 @@ class MyStack extends TerraformStack {
 
         const vpc = new Vpc.Vpc(this, "vpc", {
             azs: dataAwsAvailabilityZonesAvailable.names.slice(0,3),
-            cidr: "10.0.0.0/16",
+            cidr: "10.10.0.0/16",
             enableDnsHostnames: true,
             enableNatGateway: true,
             name: "training-k8s-vpc",
-            privateSubnets: ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"],
-            publicSubnets: ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"],
+            privateSubnets: ["10.10.1.0/24", "10.10.2.0/24", "10.10.3.0/24"],
+            publicSubnets: ["10.10.4.0/24", "10.10.5.0/24", "10.10.6.0/24"],
             singleNatGateway: true,
         });
         const awsSecurityGroupNodeGroupOne = new aws.vpc.SecurityGroup(
@@ -61,7 +61,7 @@ class MyStack extends TerraformStack {
             {
                 ingress: [
                     {
-                        cidrBlocks: ["10.0.0.0/8"],
+                        cidrBlocks: ["10.10.0.0/8"],
                         fromPort: 22,
                         protocol: "tcp",
                         toPort: 22,
@@ -89,7 +89,7 @@ class MyStack extends TerraformStack {
         );
         const eks = new Eks.Eks(this, "eks", {
             clusterName: clusterName,
-            clusterVersion: "1.22",
+            clusterVersion: "1.23",
             eksManagedNodeGroupDefaults: [
                 {
                     amiType: "AL2_x86_64",

@@ -2,6 +2,8 @@
 - name: devmachine_provisioner
   hosts: localhost
   become: true
+  roles:
+    - luizgavalda.aur
   tasks:
     - name: Install pacman tools
       pacman:
@@ -28,6 +30,26 @@
         - wireshark-qt
         - argocd
         - k9s
+    - name: AUR applications
+      aur:
+        name: "{{ item }}"
+        state: present
+      become_user: phiro
+      loop:
+        - libvirt
+        - qemu-desktop
+        - google-cloud-sdk
     - name: Install rust
       shell: rustup install stable
       become_user: phiro
+    - name: Create the secret folders
+      file:
+        state: directory
+        path: ci/concourse/secrets
+    - name:
+      file:
+        state: touch
+        path: "ci/concourse/secrets/{{ item }}"
+      loop:
+        - "git.creds"
+        - "docker.creds"

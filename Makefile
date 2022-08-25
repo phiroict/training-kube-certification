@@ -5,7 +5,7 @@ istio_version=1.14.3
 istio_version_arm=1.14.3
 nginx_ingress_controller_version=1.3.0
 concourse_version=7.8.2
-PHIRO_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa.pub)
+PHIRO_AKS_PUB_KEY=$(shell cat /home/phiro/.ssh/id_rsa.pub)
 
 # Archlinux setup
 init_archlinux:
@@ -17,6 +17,7 @@ init_archlinux:
 	minikube config set driver kvm2
 init_ansible:
 	sudo pacman -S ansible --needed
+	ansible-galaxy install luizgavalda.aur
 	ansible-playbook --ask-become-pass -c local infra/ansible/dev-machine/playbook.yaml
 # Kubernetes calls  --------------------------------------------------------------------------------------------------------------
 create_user:

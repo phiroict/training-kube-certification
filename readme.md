@@ -1,4 +1,4 @@
-
+# Full stack kubernetes project. 
 
 # Goal 
  This is a project that is built while studying for the K8s certification, and slowly turned into a full stack development
@@ -9,9 +9,18 @@ Most of the documentation can be read in the [wiki](https://github.com/phiroict/
 Check out the wiki [by](git@github.com:phiroict/training-kube-certification.wiki.git) 
 This readme will contain developer setup notes and observations, all other documentation is in the [wiki](https://github.com/phiroict/training-kube-certification/wiki). 
 
+## What to do? 
+- Setup development machine 
+- Build kubernetes stack 
+- Build applications 
+- Deploy CI and CD components.  
+
 ## Setup Dev machine 
 
 See the [Setup wiki](https://github.com/phiroict/training-kube-certification/wiki/Setup)
+
+## Build the kubernetes stack
+See the [Setup wiki](https://github.com/phiroict/training-kube-certification/wiki/Kubernetes-Cluster-Provision)
 
 ## Building the applications
 
