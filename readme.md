@@ -158,6 +158,11 @@ See the [wiki](https://github.com/phiroict/training-kube-certification/wiki/CI#c
 
 # Appendixes 
 ## Convenient commands 
+### Create alias for
+Add this to your `.bashrc` or `.zshrc` file
+```bash
+alias k="kubectl"
+```
 
 ### set namespace default 
 

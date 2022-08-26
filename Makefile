@@ -158,6 +158,8 @@ concourse_init:
 	tar -xzvf concourse-$(concourse_version)-linux-amd64.tgz
 	kubectl apply -f ci/concourse/infra/concourse-namespace.yaml
 	mkdir -p ci/concourse/secrets
+	touch ci/concourse/secrets/git.creds
+	touch ci/concourse/secrets/docker.creds
 	sudo cp -p concourse/bin/concourse /usr/bin/concourse
 	cd concourse/fly-assets && tar -xzvf fly-linux-amd64.tgz
 	sudo cp -p concourse/fly-assets/fly /usr/bin/fly
