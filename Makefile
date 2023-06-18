@@ -294,8 +294,8 @@ aws_init:
 	cd stack/cloud/aws && npm install
 	cd stack/cloud/aws && npm install @cdktf/provider-aws
 
-	cd stack/cloud/aws && cdktf provider add "aws@4.27.0"
-	cd stack/cloud/aws && cdktf provider add "kubernetes@2.12.1"
+	cd stack/cloud/aws && cdktf provider add "aws@15.0.0"
+	cd stack/cloud/aws && cdktf provider add "kubernetes@7.0.0"
 aws_bootstrap:
 	cd stack/cloud/aws/bootstrap && aws-vault exec home -- terraform init && aws-vault exec home -- terraform plan -out state.plan && aws-vault exec home -- terraform apply -auto-approve state.plan
 aws_get:
