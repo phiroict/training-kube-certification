@@ -5,7 +5,7 @@ istio_version=1.14.3
 istio_version_arm=1.14.3
 nginx_ingress_controller_version=1.3.0
 concourse_version=7.8.2
-PHIRO_AKS_PUB_KEY=$(shell cat /home/phiro/.ssh/id_rsa.pub)
+PHIRO_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa_np.pub)
 
 # Archlinux setup
 init_archlinux:
@@ -15,6 +15,8 @@ init_archlinux:
 	sudo systemctl start libvirtd.service
 	sudo usermod -a -G libvirt $(whoami)
 	minikube config set driver kvm2
+init_mac_m:
+	brew install istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt argocd k9s node npm cdktf
 init_ansible:
 	sudo pacman -S ansible --needed
 	ansible-galaxy install luizgavalda.aur
@@ -244,7 +246,7 @@ provision_cloud_aks_continuation:  argocd_provision_azure concourse_web istio_ki
 az_provision: provision_cloud_aks sleep_long provision_cloud_aks_continuation
 
 # AWS ##############
-provision_cloud_aws: aws_get aws_synth aws_wa_init aws_wa_patch aws_wa_plan aws_wa_apply
+provision_cloud_aws: aws_get aws_synth aws_wa_init aws_wa_plan aws_wa_apply
 deprovision_cloud_aws: aws_wa_patch aws_wa_destroy
 
 # Google ###########
@@ -297,24 +299,27 @@ aws_init:
 aws_bootstrap:
 	cd stack/cloud/aws/bootstrap && aws-vault exec home -- terraform init && aws-vault exec home -- terraform plan -out state.plan && aws-vault exec home -- terraform apply -auto-approve state.plan
 aws_get:
-	cd stack/cloud/aws && cdktf get
+	cd stack/cloud/aws && npm install && cdktf get
 aws_synth:
-	cd stack/cloud/aws && aws-vault exec home --region ap-southeast-2 -- cdktf synth aws_instance
+	cd stack/cloud/aws && aws-vault exec home --region ap-southeast-2 -- cdktf synth eks-cluster-stack
+aws_apply:
+	cd stack/cloud/aws && aws-vault exec home --no-session --region ap-southeast-2 -- cdktf deploy eks-cluster-stack --require-approval never
+
 aws_build:
-	cd stack/cloud/aws && aws-vault exec home --no-session -- cdktf deploy aws_instance --auto-approve
+	cd stack/cloud/aws && aws-vault exec home --no-session -- cdktf deploy eks-cluster-stack --auto-approve
 aws_destroy:
 	cd stack/cloud/aws && aws-vault exec home --region ap-southeast-2 --no-session -- cdktf destroy --auto-approve
 aws_eks_kubectl_config:
 	aws-vault exec home -- aws eks update-kubeconfig --region ap-southeast-2 --name $(shell aws-vault exec home -- aws eks list-clusters | jq -r '.clusters[0]')
 # As there is a generation error we need to patch before we run the set.
 aws_wa_init: aws_get aws_synth
-	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home -- terraform init
+	cd stack/cloud/aws/cdktf.out/stacks/eks-cluster-stack && aws-vault exec home -- terraform init
 aws_wa_patch:
 	cd stack/cloud/aws && python3 patch_cdk.tf.json.py
 aws_wa_plan:
-	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform plan -out plan.plan
+	cd stack/cloud/aws/cdktf.out/stacks/eks-cluster-stack && aws-vault exec home --no-session -- terraform plan -out plan.plan
 aws_wa_apply:
-	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform apply plan.plan
+	cd stack/cloud/aws/cdktf.out/stacks/eks-cluster-stack && aws-vault exec home --no-session -- terraform apply plan.plan
 aws_wa_destroy:
-	cd stack/cloud/aws/cdktf.out/stacks/aws_instance && aws-vault exec home --no-session -- terraform destroy -auto-approve
+	cd stack/cloud/aws/cdktf.out/stacks/eks-cluster-stack && aws-vault exec home --no-session -- terraform destroy -auto-approve
 
