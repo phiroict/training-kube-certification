@@ -1,3 +1,5 @@
 datasource_image: phiroict/training_k8s_rust_datasource:20230624.0
 gateway_image: phiroict/training_k8s_rust_gateway:20230624.0
 namespace: test-applications
+service:
+  port: 8000
