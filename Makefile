@@ -1,16 +1,16 @@
 SHELL := /bin/bash
 .EXPORT_ALL_VARIABLES:
-version=20220810.1
-istio_version=1.14.3
-istio_version_arm=1.14.3
+version=20230624.0
+istio_version=1.16.1
+istio_version_arm=1.18.0
 nginx_ingress_controller_version=1.3.0
-concourse_version=7.8.2
-PHIRO_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa_np.pub)
+concourse_version=7.9.1
+PHIRO_AKS_PUB_KEY=$(shell cat /home/phiro/.ssh/id_rsa_np.pub)
 
 # Archlinux setup
 init_archlinux:
-	sudo pacman -S istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt argocd k9s --needed
-	yay -S docker-machine-driver-kvm2 libvirt qemu-headless ebtables google-cloud-sdk --needed
+	sudo pacman -S istio kubectl make rustup minikube docker socat wireshark-qt argocd k9s --needed
+	yay -S docker-machine-driver-kvm2 libvirt qemu-desktop jmeter  ebtables google-cloud-sdk --needed
 	sudo systemctl enable libvirtd.service
 	sudo systemctl start libvirtd.service
 	sudo usermod -a -G libvirt $(whoami)
@@ -35,13 +35,13 @@ init_namespaces:
 	kubectl apply -f stack/namespace_init/namespaces.yaml
 ### Deployments	
 deploy_dev:
-	cd stack/kustomize && kubectl apply -k overlays/dev
+	cd stack/helm && kubectl apply -k overlays/dev
 deploy_test:
-	cd stack/kustomize && kubectl apply -k overlays/test
+	cd stack/helm && kubectl apply -k overlays/test
 deploy_uat:
-	cd stack/kustomize && kubectl apply -k overlays/uat
+	cd stack/helm && kubectl apply -k overlays/uat
 deploy_prod:
-	cd stack/kustomize && kubectl apply -k overlays/prod
+	cd stack/helm && kubectl apply -k overlays/prod
 ### Undeployments
 undeploy_dev:
 	cd stack/kustomize && kubectl delete -k overlays/dev
@@ -105,6 +105,7 @@ minikube_virtualbox:
 minikube_kvm2:
 	minikube start --driver kvm2 --nodes 1 --cpus 14 --memory 32000M --disk-size 50gb
 	minikube addons enable ingress
+	minikube addons enable metrics-server
 minikube_delete:
 	minikube delete
 

@@ -7,4 +7,14 @@
       </list>
     </option>
   </component>
+  <component name="KubernetesSettings">
+    <option name="helmParameters">
+      <HelmParameters>
+        <option name="chartPath" value="$PROJECT_DIR$/stack/helm" />
+        <option name="valuesFiles">
+          <option value="values.yaml" />
+        </option>
+      </HelmParameters>
+    </option>
+  </component>
 </project>

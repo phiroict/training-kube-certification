@@ -19,12 +19,12 @@ RUN cargo build --release
 #    As we want to control changes, we change this once a month (or on secuity issues) with no changes in the source
 #    so we can isolate changes in the stack)
 # ##
-FROM debian:sid-20220801-slim
+FROM debian:sid-20230612-slim
 # Redeclare the argument anew as it is erased after a FROM statement. 
 ARG app_name
 # ## Using reqwest lib in rust needs the libssl version 1.1 - Note we add it for all now though strictly this is not needed for all.
 # Note we do not update the whole distro as that may introduce changes we do not want.
-RUN apt update && apt install libssl1.1
+# RUN apt update && apt install libssl1.1
 # ## Install the application and the configuration file that Rocker (The web framework in Rust) needs it.
 COPY --from=builder /app/$app_name/target/release/$app_name /
 COPY --from=builder /app/$app_name/Rocket.toml Rocket.toml
