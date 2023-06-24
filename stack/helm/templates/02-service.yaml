@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: app-gateway
+  type: NodePort
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+  - name: http-gateway
+    protocol: TCP
+    port: 8000
+    targetPort: 8000
+    nodePort: 32000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: datasource
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: app-datasource
+  type: ClusterIP
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+  - name: http-datasource
+    protocol: TCP
+    port: 8010
+    targetPort: 8010 

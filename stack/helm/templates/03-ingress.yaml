@@ -1,0 +1,35 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: gateway-gateway
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: app-gateway
+  servers:
+  - port:
+      number: 32000
+      name: http
+      protocol: HTTP
+    hosts:
+    - gateway.example.com
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: gateway-vservice
+  namespace: {{ .Values.namespace }}
+spec:
+  hosts:
+  - gateway.example.com
+  gateways:
+  - gateway-gateway
+  http:
+  - match:
+    - port: 8000
+    route:
+    - destination:
+        port:
+          number: 8000
+        host: app-gateway.dev-applications.svc.cluster.local

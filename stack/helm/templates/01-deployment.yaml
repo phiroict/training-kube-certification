@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app-gateway
+  name: app-gateway
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-gateway
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: app-gateway
+    spec:
+      containers:
+      - env:
+        - name: DATASOURCE_URL
+          value: datasource:8010/data
+        image: phiroict/training_k8s_rust_gateway:20220818.1.0
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8000
+          timeoutSeconds: 5
+        name: app-gateway
+        ports:
+        - containerPort: 8000
+          name: app-gateway
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /_status/healthz
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 500m
+            memory: 500Mi
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: localtime
+      restartPolicy: Always
+      volumes:
+      - hostPath:
+          path: /usr/share/zoneinfo/Pacific/Auckland
+        name: localtime
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app-datasource
+  name: app-datasource
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-datasource
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: app-datasource
+    spec:
+      containers:
+      - image: phiroict/training_k8s_rust_datasource:20220818.1.0
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8010
+          timeoutSeconds: 5
+        name: app-datasource
+        ports:
+        - containerPort: 8010
+          name: app-datasource
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /_status/healthz
+            port: 8010
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 500m
+            memory: 500Mi
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: localtime
+      restartPolicy: Always
+      volumes:
+      - hostPath:
+          path: /usr/share/zoneinfo/Pacific/Auckland
+        name: localtime

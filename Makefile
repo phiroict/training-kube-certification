@@ -1,11 +1,11 @@
 SHELL := /bin/bash
 .EXPORT_ALL_VARIABLES:
 version=20230624.0
-istio_version=1.16.1
-istio_version_arm=1.18.0
+istio_version=1.17.3
+istio_version_arm=1.17.3
 nginx_ingress_controller_version=1.3.0
 concourse_version=7.9.1
-PHIRO_AKS_PUB_KEY=$(shell cat /home/phiro/.ssh/id_rsa_np.pub)
+PHIRO_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa_np.pub)
 
 # Archlinux setup
 init_archlinux:
@@ -35,22 +35,22 @@ init_namespaces:
 	kubectl apply -f stack/namespace_init/namespaces.yaml
 ### Deployments	
 deploy_dev:
-	cd stack/helm && kubectl apply -k overlays/dev
+	cd stack/helm && helm install -f environments/dev/values.yaml devapp .
 deploy_test:
-	cd stack/helm && kubectl apply -k overlays/test
+	cd stack/helm && helm install  -f environments/test/values.yaml testapp .
 deploy_uat:
-	cd stack/helm && kubectl apply -k overlays/uat
+	cd stack/helm && helm install  -f environments/uat/values.yaml uatapp .
 deploy_prod:
-	cd stack/helm && kubectl apply -k overlays/prod
+	cd stack/helm && helm install  -f environments/rod/values.yaml prodapp .
 ### Undeployments
 undeploy_dev:
-	cd stack/kustomize && kubectl delete -k overlays/dev
+	cd stack/kustomize && helm uninstall -f environments/dev
 undeploy_test:
-	cd stack/kustomize && kubectl delete -k overlays/dev
+	cd stack/kustomize && helm uninstall -f environments/test
 undeploy_uat:
-	cd stack/kustomize && kubectl delete -k overlays/dev
+	cd stack/kustomize && helm uninstall -f environments/uat
 undeploy_prod:
-	cd stack/kustomize && kubectl delete -k overlays/dev
+	cd stack/kustomize && helm uninstall -f environments/prod
 
 
 # App builders -------------------------------------------------------------------------------------------------------------------
