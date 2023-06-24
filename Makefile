@@ -41,16 +41,28 @@ deploy_test:
 deploy_uat:
 	cd stack/helm && helm install  -f environments/uat/values.yaml uatapp .
 deploy_prod:
-	cd stack/helm && helm install  -f environments/rod/values.yaml prodapp .
+	cd stack/helm && helm install  -f environments/prod/values.yaml prodapp .
+### Release / update
+release_dev:
+	cd stack/helm && helm upgrade -f environments/dev/values.yaml devapp .
+release_test:
+	cd stack/helm && helm upgrade  -f environments/test/values.yaml testapp .
+release_uat:
+	cd stack/helm && helm upgrade  -f environments/uat/values.yaml uatapp .
+release_prod:
+	cd stack/helm && helm upgrade  -f environments/prod/values.yaml prodapp .
+
+
 ### Undeployments
+
 undeploy_dev:
-	cd stack/kustomize && helm uninstall -f environments/dev
+	cd stack/helm && helm delete devapp
 undeploy_test:
-	cd stack/kustomize && helm uninstall -f environments/test
+	cd stack/helm && helm delete testapp
 undeploy_uat:
-	cd stack/kustomize && helm uninstall -f environments/uat
+	cd stack/helm && helm delete uatapp
 undeploy_prod:
-	cd stack/kustomize && helm uninstall -f environments/prod
+	cd stack/helm && helm delete prodapp
 
 
 # App builders -------------------------------------------------------------------------------------------------------------------
@@ -218,18 +230,18 @@ argocd_provision:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
 	argocd cluster add --insecure minikube
-	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace  dev-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  test-applications --sync-policy none
-	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server https://$(shell minikube ip):8443 --dest-namespace  uat-applications  --sync-policy none
-	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server https://$(shell minikube ip):8443 --dest-namespace   prod-applications --sync-policy none
+	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace  dev-applications --sync-policy auto
+	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  test-applications --sync-policy none
+	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/uat --dest-server https://$(shell minikube ip):8443 --dest-namespace  uat-applications  --sync-policy none
+	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/prod --dest-server https://$(shell minikube ip):8443 --dest-namespace   prod-applications --sync-policy none
 argocd_provision_azure:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
 	argocd cluster add PhiRo-Training-Cluster --yes
-	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/dev --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace  dev-applications --sync-policy auto
-	#argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/test --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace  test-applications --sync-policy none
-	#argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/uat --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace  uat-applications  --sync-policy none
-	#argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/kustomize/overlays/prod --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace   prod-applications --sync-policy none
+	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/dev --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace  dev-applications --sync-policy auto
+	#argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/test --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace  test-applications --sync-policy none
+	#argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/uat --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace  uat-applications  --sync-policy none
+	#argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/prod --dest-server $(shell argocd cluster get PhiRo-Training-Cluster -o json | jq -r '.server') --dest-namespace   prod-applications --sync-policy none
 
 sleep:
 	sleep 30

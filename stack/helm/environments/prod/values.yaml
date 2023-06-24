@@ -1,5 +1,7 @@
 datasource_image: phiroict/training_k8s_rust_datasource:20230624.0
 gateway_image: phiroict/training_k8s_rust_gateway:20230624.0
 namespace: prod-applications
+env: prod
 service:
   port: 8000
+nodePort: 32003
