@@ -1,0 +1,3 @@
+datasource_image: phiroict/training_k8s_rust_datasource:20230624.0
+gateway_image: phiroict/training_k8s_rust_gateway:20230624.0
+namespace: uat-applications
