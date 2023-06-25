@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   selector:
-    app: app-gateway
+    istio: ingressgateway
   servers:
   - port:
       number: 32000
