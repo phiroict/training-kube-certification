@@ -14,9 +14,9 @@ spec:
       protocol: HTTPS
     tls:
       mode: SIMPLE
-      credentialName: httpbin-credential
+      credentialName: gateway-cred-{{ .Values.env }}
     hosts:
-    - gateway-{{ .Values.env }}.phiroict.local
+    - {{ .Values.env }}.phiroict.local
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -25,7 +25,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   hosts:
-  - gateway-{{ .Values.env }}.example.com
+  - {{ .Values.env }}.phiroict.local
   gateways:
   - gateway-{{ .Values.env }}-gateway
   http:

@@ -1,3 +1,6 @@
-kubectl create -n istio-system secret tls httpbin-credential \
-  --key=example_certs1/httpbin.phiroict.local.key \
-  --cert=example_certs1/httpbin.phiroict.local.crt
+ENVS="dev test uat prod"
+for CURRENT_ENV in ${ENVS}; do
+kubectl create -n istio-system secret tls gateway-cred-${CURRENT_ENV} \
+  --key=${CURRENT_ENV}/example_certs1/${CURRENT_ENV}.phiroict.local.key \
+  --cert=${CURRENT_ENV}/example_certs1/${CURRENT_ENV}.phiroict.local.crt
+done

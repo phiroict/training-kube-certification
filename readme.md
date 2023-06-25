@@ -254,6 +254,14 @@ We use istio as as service mesh with the use of certificates to encrypt the ingr
 Work in progress; 
 https://istio.io/latest/docs/tasks/traffic-management/ingress/secure-ingress/
 
+Create certs with `stack/servicemesh/create-ingress-certificates.sh`
+Then inject with `stack/servicemesh/inject-tls-certs-for-istio.sh`
+```bash
+kubectl create -n istio-system secret tls httpbin-credential \
+--key=example_certs1/httpbin.phiroict.local.key \
+--cert=example_certs1/httpbin.phiroict.local.crt
+```
+Adapt for domain names. 
 # Issues
 ## Issue context [solved]
 
