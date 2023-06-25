@@ -10,3 +10,4 @@ concourse/!/ci/concourse/infra
 concourse/
 *.plan
 *.tfstate
+**/example_certs*

@@ -241,25 +241,18 @@ Note that since k8s 1.24 the secret is no longer automatically generated, this i
 
 ## Environments 
 
-We use `kustomize` to render the environments for the kubernetes setup. 
+We use `helm` to render the environments for the kubernetes setup. 
 Note that it needs an external app installed, there is an integrated version in kubectl itself, but it is barely maintained. 
 
-The scripts are in the `stack/kustomize` folder, and you call them from that folder with:
+The scripts are in the `stack/helm` folder, and you call them from that folder with:
 
 [env is one of `{dev,test,uat,prod}`]
 
-```bash
-kustomize build overlays/<env>
-```
-Apply with
+## Istio
 
-```bash
-kubectl apply -k overlays/<env>
-```
-Remove with:
-```bash
-kubectl delete -k overlays/<env>
-```
+We use istio as as service mesh with the use of certificates to encrypt the ingress
+Work in progress; 
+https://istio.io/latest/docs/tasks/traffic-management/ingress/secure-ingress/
 
 # Issues
 ## Issue context [solved]
