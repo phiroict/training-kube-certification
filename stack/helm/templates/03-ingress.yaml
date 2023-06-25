@@ -11,9 +11,12 @@ spec:
   - port:
       number: 32000
       name: http
-      protocol: HTTP
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: httpbin-credential
     hosts:
-    - gateway-{{ .Values.env }}.example.com
+    - gateway-{{ .Values.env }}.phiroict.local
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
