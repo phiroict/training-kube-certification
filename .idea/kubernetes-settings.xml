@@ -16,5 +16,10 @@
         </option>
       </HelmParameters>
     </option>
+    <specSources>
+      <SpecSource>
+        <option name="pathOrUrl" value="$PROJECT_DIR$/istio-1.17.3/manifests/charts/base/files/gen-istio-cluster.yaml" />
+      </SpecSource>
+    </specSources>
   </component>
 </project>

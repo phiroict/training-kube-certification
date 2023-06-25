@@ -32,4 +32,4 @@ spec:
     - destination:
         port:
           number: 8000
-        host: app-gateway.dev-applications.svc.cluster.local
+        host: gateway
