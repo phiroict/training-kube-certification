@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 .EXPORT_ALL_VARIABLES:
-version=20230624.0
+version=20230625.0
 istio_version=1.17.3
 istio_version_arm=1.17.3
 nginx_ingress_controller_version=1.3.0
@@ -16,7 +16,7 @@ init_archlinux:
 	sudo usermod -a -G libvirt $(whoami)
 	minikube config set driver kvm2
 init_mac_m:
-	brew install istio kubectl make rustup minikube docker jmeter-qt socat wireshark-qt argocd k9s node npm cdktf
+	brew install istioctl kubectl make rustup minikube docker jmeter socat wireshark argocd k9s node npm cdktf
 init_ansible:
 	sudo pacman -S ansible --needed
 	ansible-galaxy install luizgavalda.aur
@@ -230,10 +230,10 @@ argocd_provision:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
 	argocd cluster add --insecure minikube
-	argocd app create dev-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/dev --dest-server https://$(shell minikube ip):8443 --dest-namespace  dev-applications --sync-policy auto
-	argocd app create test-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/test --dest-server https://$(shell minikube ip):8443 --dest-namespace  test-applications --sync-policy none
-	argocd app create uat-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/uat --dest-server https://$(shell minikube ip):8443 --dest-namespace  uat-applications  --sync-policy none
-	argocd app create prod-applications --repo https://github.com/phiroict/training-kube-certification.git --path stack/helm/overlays/prod --dest-server https://$(shell minikube ip):8443 --dest-namespace   prod-applications --sync-policy none
+	argocd app create dev-applications --repo git@github.com:phiroict/training-kube-certification.git --path stack/helm --values environments/dev/values.yaml --dest-server https://kubernetes.default.svc --dest-namespace  dev-applications --sync-policy auto
+	argocd app create test-applications --repo git@github.com:phiroict/training-kube-certification.git --path stack/helm --values environments/test/values.yaml  --dest-server https://kubernetes.default.svc --dest-namespace  test-applications --sync-policy none
+	argocd app create uat-applications --repo git@github.com:phiroict/training-kube-certification.git --path stack/helm --values environments/uat/values.yaml  --dest-server https://kubernetes.default.svc --dest-namespace  uat-applications  --sync-policy none
+	argocd app create prod-applications --repo git@github.com:phiroict/training-kube-certification.git --path stack/helm --values environments/prod/values.yaml  --dest-server https://kubernetes.default.svc --dest-namespace   prod-applications --sync-policy none
 argocd_provision_azure:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
