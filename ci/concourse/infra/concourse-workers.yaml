@@ -26,7 +26,7 @@ spec:
           # - Each init container must complete successfully before the next one starts.
       containers:
       - name:  concourse-worker
-        image:  "concourse/concourse:7.8.2-ubuntu-20220725"
+        image:  "concourse/concourse:7.11.0-ubuntu-20240112"
         args: ["worker"]
         securityContext:
           privileged: true
@@ -67,7 +67,7 @@ spec:
       volumes:
         - name: localtime
           hostPath:
-            path: /usr/share/zoneinfo/Pacific/Aucklland
+            path: /usr/share/zoneinfo/Pacific/Auckland
         - name: hostkeypub
           secret:
             secretName: tsa-host-public

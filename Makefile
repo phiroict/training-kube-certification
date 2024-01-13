@@ -1,15 +1,16 @@
 SHELL := /bin/bash
 .EXPORT_ALL_VARIABLES:
 version=20230625.0
-istio_version=1.17.3
-istio_version_arm=1.17.3
+istio_version=1.20.2
+istio_version_arm=1.20.2
 nginx_ingress_controller_version=1.3.0
-concourse_version=7.9.1
-PHIRO_AKS_PUB_KEY=$(shell cat /Users/phiro/.ssh/id_rsa_np.pub)
+concourse_version=7.11.0
+PHIRO_AKS_PUB_KEY=$(shell cat /home/phiro/.ssh/id_rsa_np.pub)
 
 # Archlinux setup
 init_archlinux:
 	sudo pacman -S istio kubectl make rustup minikube docker socat wireshark-qt argocd k9s --needed
+	rua install yay
 	yay -S docker-machine-driver-kvm2 libvirt qemu-desktop jmeter  ebtables google-cloud-sdk --needed
 	sudo systemctl enable libvirtd.service
 	sudo systemctl start libvirtd.service
@@ -138,9 +139,10 @@ istio_extras:
 	wget https://storage.googleapis.com/istio-release/releases/$(istio_version)/istio-$(istio_version)-linux-amd64.tar.gz
 	tar xfv istio-$(istio_version)-linux-amd64.tar.gz
 	kubectl apply -f istio-$(istio_version)/samples/addons/
-	rm -f istio-$(istio_version)-linux-amd64.tar.gz
-	# sudo cp -pf istio-$(istio_version)/bin/istioctl  /usr/bin/istioctl
-	# kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v$(nginx_ingress_controller_version)/deploy/static/provider/cloud/deploy.yaml
+	sudo cp -pf istio-$(istio_version)/bin/istioctl /usr/bin/istioctl
+	istioctl upgrade
+	rm -f istio-$(istio_version)-linux-amd64.tar.gz	
+	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v$(nginx_ingress_controller_version)/deploy/static/provider/cloud/deploy.yaml
 istio_extras_arm:
 	wget https://github.com/istio/istio/releases/download/$(istio_version_arm)/istio-$(istio_version_arm)-osx-arm64.tar.gz
 	tar xfv istio-$(istio_version_arm)-osx-arm64.tar.gz
@@ -177,7 +179,7 @@ concourse_init:
 	touch ci/concourse/secrets/docker.creds
 	sudo cp -p concourse/bin/concourse /usr/bin/concourse
 	cd concourse/fly-assets && tar -xzvf fly-linux-amd64.tgz
-	sudo cp -p concourse/fly-assets/fly /usr/bin/fly
+	sudo cp -p concourse/fly-assets/fly /usr/local/bin/fly
 concourse_keygen:	
 	kubectl apply -f ci/concourse/infra/concourse-namespace.yaml
 	cd concourse/bin && ./concourse generate-key -t rsa -f ../../ci/concourse/secrets/session_signing_key
@@ -230,6 +232,7 @@ argocd_provision:
 	argocd login localhost:8082 --insecure --username admin --password $(shell kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 	kubectl config get-contexts -o name
 	argocd cluster add --insecure minikube
+	argocd repo add git@github.com:phiroict/training-kube-certification.git --ssh-private-key-path ~/.ssh/id_nopass_ed25519
 	argocd app create dev-applications --repo git@github.com:phiroict/training-kube-certification.git --path stack/helm --values environments/dev/values.yaml --dest-server https://kubernetes.default.svc --dest-namespace  dev-applications --sync-policy auto
 	argocd app create test-applications --repo git@github.com:phiroict/training-kube-certification.git --path stack/helm --values environments/test/values.yaml  --dest-server https://kubernetes.default.svc --dest-namespace  test-applications --sync-policy none
 	argocd app create uat-applications --repo git@github.com:phiroict/training-kube-certification.git --path stack/helm --values environments/uat/values.yaml  --dest-server https://kubernetes.default.svc --dest-namespace  uat-applications  --sync-policy none
